@@ -6,5 +6,6 @@ $dbConfig = [
   "port" => 3306,
   "user" => "root",
   "pass" => "root",
-  "name" => "db_test"
+  "name" => "db_test",
+  "charset" => "utf8",
 ];

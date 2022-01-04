@@ -24,7 +24,7 @@ class DbController {
   private function connectToDb(array $dbConfig) {
     try {
       $this->conn = new PDO(
-        "{$dbConfig['type']}:host={$dbConfig['host']};port={$dbConfig['port']};dbname={$dbConfig['name']}",
+        "{$dbConfig['type']}:host={$dbConfig['host']};port={$dbConfig['port']};dbname={$dbConfig['name']};charset={$dbConfig['charset']}",
         $dbConfig['user'],
         $dbConfig['pass']
       );
@@ -61,7 +61,7 @@ class DbController {
   private function drop($tables) {
     try {
       foreach ($tables as $table) {
-        $sql = "DROP TABLE IF EXISTS $table";
+        $sql = "DROP TABLE $table";
         $this->conn->exec($sql);
       }
     } catch (Exception $ex) {
@@ -75,7 +75,7 @@ class DbController {
   private function initialize() {
     try {
       # Create Users table
-      $sql = <<<SQL
+      $users = <<<SQL
         CREATE TABLE IF NOT EXISTS Users (
           id BIGINT PRIMARY KEY, 
           username VARCHAR(20) UNIQUE NOT NULL,
@@ -85,9 +85,8 @@ class DbController {
           description VARCHAR(256) NULL
         );
       SQL;
-      $this->conn->exec($sql);
+      $this->conn->exec($users);
     } catch (Exception $ex) {
-      var_dump($ex);
       httpException("Failed to initialize db", 500);
     }
   }
