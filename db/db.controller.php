@@ -14,7 +14,7 @@ class DbController {
 
     # Include $usersFixtures from global scope here
     global $usersFixtures;
-    $this->seed('Users', ["id", "name", "age"], $usersFixtures);
+    $this->seed('Users', ["id", "username", "password"], $usersFixtures);
   }
 
   public function getConnection() {
@@ -78,17 +78,16 @@ class DbController {
       $sql = <<<SQL
         CREATE TABLE IF NOT EXISTS Users (
           id BIGINT PRIMARY KEY, 
-          username VARCHAR(20) NOT NULL,
+          username VARCHAR(20) UNIQUE NOT NULL,
           fullname VARCHAR(30) NULL,
           password VARCHAR(30) NOT NULL,
           profileImage VARCHAR(128) NULL,
-          description VARCHAR(256) NULL,
-          UNIQUE (username),
-          UNIQUE (id)
-        ) ENGINE = InnoDB DEFAULT CHARSET = UTF8
+          description VARCHAR(256) NULL
+        );
       SQL;
       $this->conn->exec($sql);
     } catch (Exception $ex) {
+      var_dump($ex);
       httpException("Failed to initialize db", 500);
     }
   }

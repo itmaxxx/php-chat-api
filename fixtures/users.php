@@ -1,6 +1,8 @@
 <?php
 
-$MaxDmitriev = [1, "Max Dmitriev", 21];
-$IlyaMehof = [2, "Ilya Mehof", 21];
+$plainPassword = "qwerty";
+
+$MaxDmitriev = [1, "dmitriev", $plainPassword];
+$IlyaMehof = [2, "mehoff", $plainPassword];
 
 $usersFixtures = [$MaxDmitriev, $IlyaMehof];
