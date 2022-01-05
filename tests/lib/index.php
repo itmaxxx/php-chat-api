@@ -67,6 +67,7 @@ function request($url) {
 
   curl_setopt($req, CURLOPT_URL, $url);
   curl_setopt($req, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($req, CURLOPT_FRESH_CONNECT, TRUE);
 
   $response = curl_exec($req);
   $responseInfo = curl_getinfo($req);
