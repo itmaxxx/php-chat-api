@@ -43,10 +43,13 @@ class DbController {
   public function seed(string $table, array $columns, array $fixtures) {
     try {
       $columnsString = implode(",", $columns);
-      $valuesString = implode(",", array_fill(0, count($columns), "?"));
 
       foreach ($fixtures as $fixture) {
-        $sql = "INSERT INTO $table ($columnsString) VALUES ($valuesString)";
+        $fixtureKeys = array_keys($fixture);
+        $fixtureKeysString = ":" . implode(", :", $fixtureKeys);
+
+        $sql = "INSERT INTO $table ($columnsString) VALUES ($fixtureKeysString)";
+
         $this->conn->prepare($sql)->execute($fixture);
       }
     } catch (Exception $ex) {
