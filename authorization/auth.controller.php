@@ -20,7 +20,6 @@ class AuthController {
     // - encrypt password
     // - save user
     // - generate jwt
-    //
     $payload = array(
       "username" => "jwt works",
       "fullname" => "Max Dmitriev"

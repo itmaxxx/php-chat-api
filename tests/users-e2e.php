@@ -21,6 +21,10 @@ describe("[GET] /api/users", function() {
     # assertObject($json->data->users, $usersFixtures);
   });
 
+  
+});
+
+describe("[GET] /api/users/:userId", function() {
   it("should get user by id", function() {
     global $testsConfig;
     global $MaxDmitriev;
@@ -31,7 +35,7 @@ describe("[GET] /api/users", function() {
     assertStrict($response['info']['http_code'], 200);
     assertObject($json->data->user, $MaxDmitriev);
   });
-});
+})
 
 ?>
 </pre>
