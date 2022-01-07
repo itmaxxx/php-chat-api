@@ -1,10 +1,11 @@
 <?php
 
+@include_once "./vendor/autoload.php";
 @include_once "./utils/httpException.php";
 @include_once "./utils/request.php";
 @include_once "./users/users.controller.php";
 @include_once "./db/db.controller.php";
-@include_once "./authorization/auth.controller.php";
+@include_once "./auth/auth.controller.php";
 
 class AppController {
   # Connection
@@ -26,7 +27,7 @@ class AppController {
     $this->dbController = new DbController($dbConfig);
     $this->conn = $this->dbController->getConnection();
 
-    # Initilize controllers
+    # Initialize controllers
     $this->usersController = new UsersController($this->conn);
     $this->authController = new AuthController($this->conn);
 
@@ -45,8 +46,6 @@ class AppController {
   private function router() {
     switch($this->req['method']) {
       case 'GET':
-        header('Content-Type: text/html');
-
         // /users/:userId
         if (strpos($this->req['resource'], '/api/users/') === 0) {
           $this->usersController->getUserById($this->req);
@@ -58,20 +57,20 @@ class AppController {
           include_once './tests/auth-e2e.php';
         } else {
           httpException("Route not found " . $this->req['resource'], 404)['end']();
-          logMessage("Route not found $req");
+          logMessage("Route not found $this->req");
         }
 
         break;
 
       case 'POST':
-        [$body, $data] = $this->_req->parseBody();
-
+        $reqBody = $this->_req->parseBody();
+        
         if ($this->req['resource'] === '/api/users') {
-          $this->usersController->createUser($data);
-        } elseif ($this->req['resource'] === '/api/sign-up') {
-          $this->authController->signUp($data);
-        } elseif ($this->req['resource'] === '/api/sign-in') {
-          $this->authController->signIn($data);
+          $this->usersController->createUser($reqBody["data"]);
+        } elseif ($this->req['resource'] === '/api/auth/sign-up') {
+          $this->authController->signUp($reqBody["data"]);
+        } elseif ($this->req['resource'] === '/api/auth/sign-in') {
+          $this->authController->signIn($reqBody["data"]);
         } else {
           httpException("Route not found", 404)['end']();
         }
