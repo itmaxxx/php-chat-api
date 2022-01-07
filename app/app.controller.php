@@ -51,10 +51,6 @@ class AppController {
           $this->usersController->getUserById($this->req);
         } elseif ($this->req['resource'] === '/api/users') {
           $this->usersController->getUsers();
-        } elseif ($this->req['resource'] === '/api/tests/users-e2e') {
-          include_once './tests/users-e2e.php';
-        } elseif ($this->req['resource'] === '/api/tests/auth-e2e') {
-          include_once './tests/auth-e2e.php';
         } else {
           httpException("Route not found " . $this->req['resource'], 404)['end']();
           logMessage("Route not found $this->req");
