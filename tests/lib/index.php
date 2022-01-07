@@ -34,7 +34,7 @@ function it($description, $func) {
   } catch (Exception $ex) {
     throw new TestException(
       "it() $description failed" . "</br>", 
-      $ex->getMessage() . " (file: " . $ex->getFile() . ", line " . $ex->getLine() . ")<br/>");
+      $ex->getMessage() . " (file: " . $ex->getTrace()[0]["file"] . ", line " . $ex->getTrace()[0]["line"] . ")<br/>");
   }
 }
 
