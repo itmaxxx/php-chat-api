@@ -1,9 +1,9 @@
 <?php
 
-@include_once __DIR__ . "../utils/httpException.php";
-@include_once __DIR__ . "../utils/jsonResponse.php";
+@include_once __DIR__ . "/../utils/httpException.php";
+@include_once __DIR__ . "/../utils/jsonResponse.php";
 @include_once __DIR__ . "/auth.service.php";
-@include_once __DIR__ . "../utils/jwt.php";
+@include_once __DIR__ . "/../utils/jwt.php";
 
 class AuthController {
   private $authService;
@@ -19,13 +19,20 @@ class AuthController {
     // - check if user with this username exists
     // - encrypt password
     // - save user
-    // - generate jwt
+    // + generate jwt
+    
     $payload = array(
-      "username" => "jwt works",
-      "fullname" => "Max Dmitriev"
+      "username" => $registerUserDto["username"],
+      "createdAt" => time()
     );
     
-    return jwtEncode($payload);
+    $jwt = jwtEncode($payload);
+    
+    $response = array(
+      "jwt" => $jwt
+    );
+    
+    return jsonResponse($response, 201);
   }
 
   function signIn($loginUserDto) {
