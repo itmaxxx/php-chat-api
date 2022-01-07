@@ -5,14 +5,20 @@ use Firebase\JWT\Key;
 
 $key = "jwt_secret_key";
 
-function jwtEncode($payload) {
-  $jwt = JWT::encode($payload, $key, 'HS256');
-  return $jwt;
+function jwtEncode($payload): string
+{
+	global $key;
+  
+  return JWT::encode($payload, $key);
 }
 
-function jwtDecode($jwt) {
+function jwtDecode($jwt): object
+{
+	global $key;
+
   $decoded = JWT::decode($jwt, new Key($key, 'HS256'));
   print_r($decoded);
+
   return $decoded;
 }
 
