@@ -10,7 +10,7 @@ class TestException extends Exception
   }
 
   public function __toString() {
-    return __CLASS__ . ": [{$this->exceptionMessage}]: {$this->message}\n";
+    return __CLASS__ . ": [$this->exceptionMessage]: $this->message\n";
   }
 
   public function getExceptionMessage() {
@@ -38,7 +38,8 @@ function it($description, $func) {
   }
 }
 
-function assertStrict($v1, $v2) {
+function assertStrict($v1, $v2): bool
+{
   if ($v1 === $v2) {
     return true;
   } else {
@@ -46,7 +47,8 @@ function assertStrict($v1, $v2) {
   }
 }
 
-function assertNotStrict($v1, $v2) {
+function assertNotStrict($v1, $v2): bool
+{
   if ($v1 == $v2) {
     return true;
   } else {
@@ -54,7 +56,8 @@ function assertNotStrict($v1, $v2) {
   }
 }
 
-function assertObject($obj1, $obj2) {
+function assertObject($obj1, $obj2): bool
+{
   if (json_encode($obj1) === json_encode($obj2)) {
     return true;
   } else {
@@ -62,12 +65,24 @@ function assertObject($obj1, $obj2) {
   }
 }
 
-function request($url) {
+function request($method, $url, $json = NULL): array
+{
   $req = curl_init();
 
   curl_setopt($req, CURLOPT_URL, $url);
-  curl_setopt($req, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($req, CURLOPT_FRESH_CONNECT, TRUE);
+  curl_setopt($req, CURLOPT_CUSTOMREQUEST, $method);
+  curl_setopt($req, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($req, CURLOPT_FRESH_CONNECT, true);
+
+  if ($json) {
+    $body = json_encode($json, JSON_UNESCAPED_UNICODE);
+  
+    curl_setopt($req, CURLOPT_POSTFIELDS, $body);
+    curl_setopt($req, CURLOPT_HTTPHEADER, array(
+      'Content-Type: application/json',
+      'Content-Length: ' . strlen($body))
+    );
+  }
 
   $response = curl_exec($req);
   $responseInfo = curl_getinfo($req);
