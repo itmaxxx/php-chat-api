@@ -11,7 +11,7 @@ describe("[GET] /api/users", function() {
     global $testsConfig;
     global $usersFixtures;
 
-    $response = request($testsConfig["host"] . "/api/users");
+    $response = request("GET", $testsConfig["host"] . "/api/users");
     $json = json_decode($response['data']);
 
     # var_dump($json->data->users);
@@ -20,8 +20,6 @@ describe("[GET] /api/users", function() {
     # assertStrict($response['info']['http_code'], 200);
     # assertObject($json->data->users, $usersFixtures);
   });
-
-  
 });
 
 describe("[GET] /api/users/:userId", function() {
@@ -29,7 +27,7 @@ describe("[GET] /api/users/:userId", function() {
     global $testsConfig;
     global $MaxDmitriev;
 
-    $response = request($testsConfig["host"] . "/api/users/" . $MaxDmitriev["id"]);
+    $response = request("GET", $testsConfig["host"] . "/api/users/" . $MaxDmitriev["id"]);
 	assertStrict($response['info']['http_code'], 200);
 
 	$json = json_decode($response['data']);
