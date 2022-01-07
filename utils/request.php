@@ -9,7 +9,8 @@ class Request {
     $this->parseRequest($req);
   }
 
-  public function getRequest() {
+  public function getRequest(): array
+  {
     return array(
       "content-type" => $this->contentType,
       "method" => $this->method,
@@ -35,25 +36,26 @@ class Request {
     }
   }
 
-  public function parseBody() {
+  public function parseBody(): array
+  {
     # Parsed body
     $body = array();
     # Parsed json from body
     $data = array();
-
-    if ($this->reqContentType == 'application/json') {
+    
+    if ($this->contentType == 'application/json') {
       $body = file_get_contents("php://input");
       $data = json_decode($body, true);
 
       if (json_last_error() !== JSON_ERROR_NONE) {
-        httpException("Error parsing json", 400)['end']();
+        httpException("Error parsing json")['end']();
       }
-    } else if ($reqContentType == 'application/x-www-form-urlencoded') {
-      httpException("Form content type not supported yet", 400)['end']();
+    } else if ($this->contentType == 'application/x-www-form-urlencoded') {
+      httpException("Form content type not supported yet")['end']();
     } else {
-      httpException("Unsupported Content-Type", 400)['end']();
+      httpException("Unsupported Content-Type $this->contentType")['end']();
     }
-
+    
     return array("body" => $body, "data" => $data);
   }
 }
