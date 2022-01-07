@@ -30,10 +30,14 @@ describe("[GET] /api/users/:userId", function() {
     global $MaxDmitriev;
 
     $response = request($testsConfig["host"] . "/api/users/" . $MaxDmitriev["id"]);
-    $json = json_decode($response['data']);
+	assertStrict($response['info']['http_code'], 200);
 
-    assertStrict($response['info']['http_code'], 200);
-    assertObject($json->data->user, $MaxDmitriev);
+	$json = json_decode($response['data']);
+    $userData = $json->data->user;
+
+    assertStrict(intval($userData->id), $MaxDmitriev["id"]);
+    assertStrict($userData->username, $MaxDmitriev["username"]);
+    assertStrict(isset($userData->password), false);
   });
 })
 
