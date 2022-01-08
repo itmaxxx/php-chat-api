@@ -56,6 +56,21 @@
       assertStrict($response['info']['http_code'], 200);
       assertStrict(strlen($json->data->jwt) > 0, true);
     });
+  
+    it("should return error when password doesnt match", function () {
+      global $testsConfig, $MaxDmitriev, $messages;
+    
+      $body = [
+        "username" => $MaxDmitriev["username"],
+        "password" => "random_password"
+      ];
+    
+      $response = request("POST", $testsConfig["host"] . "/api/auth/sign-in", $body);
+      $json = json_decode($response['data']);
+    
+      assertStrict($response['info']['http_code'], 401);
+      assertStrict($json->error, $messages["failed_to_sign_in"]);
+    });
     
     it("should return error when trying to sign in with not existing username", function () {
       global $testsConfig, $messages;
