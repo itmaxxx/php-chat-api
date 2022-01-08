@@ -45,7 +45,7 @@
       return jsonResponse($response);
     }
     
-    function signIn($loginUserDto)
+    function signIn($loginUserDto): array
     {
       global $messages;
       
