@@ -4,6 +4,7 @@
   @include_once __DIR__ . "/../utils/jsonResponse.php";
   @include_once __DIR__ . "/auth.service.php";
   @include_once __DIR__ . "/../utils/jwt.php";
+  @include_once __DIR__ . "/../locale/en/messages.php";
   
   class AuthController
   {
@@ -18,18 +19,24 @@
     
     function signUp($registerUserDto): array
     {
+      global $messages;
+      
       // TODO:
-      // - check if user with this username exists
       // - encrypt password
       // - save user
-      // + generate jwt
       
-      $payload = array(
+      $foundUser = $this->usersService->getUserByUsername($registerUserDto["username"]);
+      
+      if (!is_null($foundUser)) {
+        httpException($messages["username_taken"])['end']();
+      }
+      
+      $jwtPayload = array(
         "username" => $registerUserDto["username"],
         "createdAt" => time()
       );
       
-      $jwt = jwtEncode($payload);
+      $jwt = jwtEncode($jwtPayload);
       
       $response = array(
         "jwt" => $jwt
@@ -40,9 +47,32 @@
     
     function signIn($loginUserDto)
     {
+      global $messages;
+      
       // TODO:
-      // - find user by username
-      // - check if password match
-      // - generate jwt
+      // - check encrypted password match
+  
+      $foundUser = $this->usersService->getUserByUsername($loginUserDto["username"]);
+  
+      if (is_null($foundUser)) {
+        httpException($messages["user_not_found"])['end']();
+      }
+      
+      if ($foundUser["password"] !== $loginUserDto["password"]) {
+        httpException($messages["failed_to_sign_in"], 401)['end']();
+      }
+  
+      $jwtPayload = array(
+        "username" => $loginUserDto["username"],
+        "createdAt" => time()
+      );
+  
+      $jwt = jwtEncode($jwtPayload);
+  
+      $response = array(
+        "jwt" => $jwt
+      );
+  
+      return jsonResponse($response);
     }
   }

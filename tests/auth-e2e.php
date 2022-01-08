@@ -37,7 +37,7 @@
       $json = json_decode($response['data']);
   
       assertStrict($response['info']['http_code'], 400);
-      assertStrict($json->error, $messages["username_taken"]);
+      assertStrict($json->data->error, $messages["username_taken"]);
     });
   });
   
@@ -69,7 +69,7 @@
       $json = json_decode($response['data']);
     
       assertStrict($response['info']['http_code'], 401);
-      assertStrict($json->error, $messages["failed_to_sign_in"]);
+      assertStrict($json->data->error, $messages["failed_to_sign_in"]);
     });
     
     it("should return error when trying to sign in with not existing username", function () {
@@ -84,7 +84,7 @@
       $json = json_decode($response['data']);
   
       assertStrict($response['info']['http_code'], 400);
-      assertStrict($json->error, $messages["user_not_found"]);
+      assertStrict($json->data->error, $messages["user_not_found"]);
     });
   });
 

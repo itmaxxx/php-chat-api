@@ -45,6 +45,20 @@
         return null;
       }
     }
+  
+    function getUserByUsername($username)
+    {
+      $sql = "SELECT * FROM Users WHERE username=:username";
+      $stmt = $this->conn->prepare($sql);
+      $stmt->bindValue(":username", $username);
+      $stmt->execute();
+    
+      if ($stmt->rowCount() > 0) {
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+      } else {
+        return null;
+      }
+    }
     
     function createUser($user): bool
     {
