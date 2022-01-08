@@ -9,7 +9,7 @@
       $this->conn = $conn;
     }
     
-    function getUsers()
+    function getUsers(): array
     {
       $sql = "SELECT * FROM Users";
       $result = $this->conn->query($sql);
@@ -21,6 +21,15 @@
       }
       
       return $users;
+    }
+    
+    function createUserRO($user)
+    {
+      $userRO = $user;
+      
+      unset($userRO["password"]);
+      
+      return $userRO;
     }
     
     function getUserById($id)
@@ -37,14 +46,14 @@
       }
     }
     
-    function createUser($user)
+    function createUser($user): bool
     {
       var_dump($user);
       
+      // TODO: Maybe use db seed func here?
+      
       # $sql = "INSERT INTO Users (name) VALUES ('Max')";
       # $conn->exec($sql);
-      
-      $this->users[] = $user;
       
       return true;
     }

@@ -1,8 +1,9 @@
 <?php
   
-  @include_once("./utils/httpException.php");
-  @include_once "./utils/jsonResponse.php";
-  @include_once("users.service.php");
+  @include_once __DIR__ . "/../utils/httpException.php";
+  @include_once __DIR__ . "/../utils/jsonResponse.php";
+  @include_once __DIR__ . "/users.service.php";
+  @include_once __DIR__ . "/../locale/en/messages.php";
   
   class UsersController
   {
@@ -26,21 +27,19 @@
     
     function getUserById($req)
     {
+      global $messages;
+      
       # Parse user id from url
       $userId = intval(substr($req['resource'], strlen('/api/users/')));
-      
-      # if (!+$userId) {
-      #   httpException("'userId' should be number")['end']();
-      # }
       
       $user = $this->usersService->getUserById($userId);
       
       if (is_null($user)) {
-        httpException("User not found", 404)['end']();
+        httpException($messages["user_not_found"], 404)['end']();
       }
       
       $response = array(
-        "user" => $user
+        "user" => $this->usersService->createUserRO($user)
       );
       
       jsonResponse($response)['end']();

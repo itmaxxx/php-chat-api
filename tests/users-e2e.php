@@ -14,11 +14,8 @@
       $response = request("GET", $testsConfig["host"] . "/api/users");
       $json = json_decode($response['data']);
       
-      # var_dump($json->data->users);
-      # var_dump($usersFixtures);
-      
-      # assertStrict($response['info']['http_code'], 200);
-      # assertObject($json->data->users, $usersFixtures);
+      assertStrict($response['info']['http_code'], 200);
+      assertStrict(count($json->data->users), count($usersFixtures));
     });
   });
   
@@ -28,11 +25,11 @@
       global $MaxDmitriev;
       
       $response = request("GET", $testsConfig["host"] . "/api/users/" . $MaxDmitriev["id"]);
-      assertStrict($response['info']['http_code'], 200);
       
       $json = json_decode($response['data']);
       $userData = $json->data->user;
       
+      assertStrict($response['info']['http_code'], 200);
       assertStrict(intval($userData->id), $MaxDmitriev["id"]);
       assertStrict($userData->username, $MaxDmitriev["username"]);
       assertStrict(isset($userData->password), false);
