@@ -45,14 +45,14 @@
         return null;
       }
     }
-  
+    
     function getUserByUsername($username)
     {
       $sql = "SELECT * FROM Users WHERE username=:username";
       $stmt = $this->conn->prepare($sql);
       $stmt->bindValue(":username", $username);
       $stmt->execute();
-    
+      
       if ($stmt->rowCount() > 0) {
         return $stmt->fetch(PDO::FETCH_ASSOC);
       } else {
@@ -60,15 +60,13 @@
       }
     }
     
-    function createUser($user): bool
+    function createUser($id, $username, $password)
     {
-      var_dump($user);
-      
-      // TODO: Maybe use db seed func here?
-      
-      # $sql = "INSERT INTO Users (name) VALUES ('Max')";
-      # $conn->exec($sql);
-      
-      return true;
+      $sql = "INSERT INTO Users (id, username, password) VALUES (:id, :username, :password)";
+      $stmt = $this->conn->prepare($sql);
+      $stmt->bindValue(":id", $id);
+      $stmt->bindValue(":username", $username);
+      $stmt->bindValue(":password", $password);
+      $stmt->execute();
     }
   }

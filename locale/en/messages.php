@@ -6,4 +6,5 @@
     "user_created" => "User created",
     "failed_to_create_user" => "Failed to create user",
     "failed_to_sign_in" => "Failed to sign in",
+    "failed_to_sign_up" => "Failed to sign up",
   ];

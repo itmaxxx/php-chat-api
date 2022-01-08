@@ -23,12 +23,19 @@
       
       // TODO:
       // - encrypt password
-      // - save user
       
       $foundUser = $this->usersService->getUserByUsername($registerUserDto["username"]);
       
       if (!is_null($foundUser)) {
         httpException($messages["username_taken"])['end']();
+      }
+      
+      $id = random_int(0, 9999999);
+      
+      try {
+        $this->usersService->createUser($id, $registerUserDto["username"], $registerUserDto["password"]);
+      } catch (Exception $exception) {
+        httpException($messages["failed_to_sign_up"])['end']();
       }
       
       $jwtPayload = array(
@@ -51,9 +58,9 @@
       
       // TODO:
       // - check encrypted password match
-  
+      
       $foundUser = $this->usersService->getUserByUsername($loginUserDto["username"]);
-  
+      
       if (is_null($foundUser)) {
         httpException($messages["user_not_found"])['end']();
       }
@@ -61,18 +68,18 @@
       if ($foundUser["password"] !== $loginUserDto["password"]) {
         httpException($messages["failed_to_sign_in"], 401)['end']();
       }
-  
+      
       $jwtPayload = array(
-        "username" => $loginUserDto["username"],
+        "username" => $foundUser["username"],
         "createdAt" => time()
       );
-  
+      
       $jwt = jwtEncode($jwtPayload);
-  
+      
       $response = array(
         "jwt" => $jwt
       );
-  
+      
       return jsonResponse($response);
     }
   }
