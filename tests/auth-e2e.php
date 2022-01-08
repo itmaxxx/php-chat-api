@@ -21,7 +21,7 @@
       //       Because in case we failed to decode json we should show response text
       $json = json_decode($response['data']);
   
-      assertStrict($json->statusCode, 200);
+      assertStrict($response['info']['http_code'], 200);
       assertStrict(strlen($json->data->jwt) > 0, true);
     });
     
@@ -35,8 +35,8 @@
       
       $response = request("POST", $testsConfig["host"] . "/api/auth/sign-up", $body);
       $json = json_decode($response['data']);
-      
-      assertStrict($json->statusCode, 400);
+  
+      assertStrict($response['info']['http_code'], 400);
       assertStrict($json->error, $messages["username_taken"]);
     });
   });
@@ -53,7 +53,7 @@
       $response = request("POST", $testsConfig["host"] . "/api/auth/sign-in", $body);
       $json = json_decode($response['data']);
   
-      assertStrict($json->statusCode, 200);
+      assertStrict($response['info']['http_code'], 200);
       assertStrict(strlen($json->data->jwt) > 0, true);
     });
     
@@ -67,8 +67,8 @@
       
       $response = request("POST", $testsConfig["host"] . "/api/auth/sign-in", $body);
       $json = json_decode($response['data']);
-      
-      assertStrict($json->statusCode, 400);
+  
+      assertStrict($response['info']['http_code'], 400);
       assertStrict($json->error, $messages["user_not_found"]);
     });
   });

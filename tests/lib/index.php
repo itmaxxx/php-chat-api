@@ -24,21 +24,22 @@
   function describe($description, $func)
   {
     try {
-      echo "describe() $description</br>";
+      echo "$description</br>";
       $func();
     } catch (TestException $ex) {
-      echo "[FAIL] describe() $description -> " . $ex->getMessage() . "  at " . $ex->getExceptionMessage() . "</br>";
+      echo "<b style='color: red'>  [FAIL] $description -> " . $ex->getMessage() . "  at " . $ex->getExceptionMessage() . "</b></br>";
     }
   }
   
   function it($description, $func)
   {
     try {
-      echo "it() $description</br>";
       $func();
+      echo "— <span style='color: #00b300'>$description</span></br>";
     } catch (Exception $ex) {
+      echo "— <span style='color: red'>$description</span></br>";
       throw new TestException(
-        "it() $description failed" . "</br>",
+        "$description failed" . "</br>  ",
         $ex->getMessage() . " (file: " . $ex->getTrace()[0]["file"] . ", line " . $ex->getTrace()[0]["line"] . ")<br/>");
     }
   }
