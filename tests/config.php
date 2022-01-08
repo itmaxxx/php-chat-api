@@ -1,5 +1,5 @@
 <?php
-
-$testsConfig = [
-  "host" => "http://chat.test"
-];
+  
+  $testsConfig = [
+    "host" => "http://chat.test"
+  ];
