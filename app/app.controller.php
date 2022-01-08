@@ -53,12 +53,15 @@
           // /users/:userId
           if (strpos($this->req['resource'], '/api/users/') === 0) {
             $this->usersController->getUserById($this->req);
-          } elseif ($this->req['resource'] === '/api/users') {
-            $this->usersController->getUsers();
-          } else {
-            httpException("Route not found " . $this->req['resource'], 404)['end']();
-            logMessage("Route not found $this->req");
+            return;
           }
+          if ($this->req['resource'] === '/api/users') {
+            $this->usersController->getUsers();
+            return;
+          }
+          
+          httpException("Route not found " . $this->req['resource'], 404)['end']();
+          logMessage("Route not found $this->req");
           
           break;
         
@@ -67,13 +70,18 @@
           
           if ($this->req['resource'] === '/api/users') {
             $this->usersController->createUser($reqBody["data"]);
-          } elseif ($this->req['resource'] === '/api/auth/sign-up') {
-            $this->authController->signUp($reqBody["data"]);
-          } elseif ($this->req['resource'] === '/api/auth/sign-in') {
-            $this->authController->signIn($reqBody["data"]);
-          } else {
-            httpException("Route not found", 404)['end']();
+            return;
           }
+          if ($this->req['resource'] === '/api/auth/sign-up') {
+            $this->authController->signUp($reqBody["data"]);
+            return;
+          }
+          if ($this->req['resource'] === '/api/auth/sign-in') {
+            $this->authController->signIn($reqBody["data"]);
+            return;
+          }
+          
+          httpException("Route not found", 404)['end']();
           
           break;
         
