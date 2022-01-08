@@ -50,7 +50,7 @@
       $result = $this->usersService->createUser($userDto);
       
       if (!$result) {
-        httpException("Failed to create user", 400)['end']();
+        httpException("Failed to create user")['end']();
       }
       
       $response = array(
@@ -59,5 +59,9 @@
       );
       
       jsonResponse($response)['end']();
+    }
+    
+    function getMe($bearer) {
+      var_dump($bearer);
     }
   }

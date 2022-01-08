@@ -4,7 +4,7 @@
   
   class Request
   {
-    private $contentType, $method, $url, $resource;
+    private $contentType, $method, $url, $resource, $headers;
     
     public function __construct($req)
     {
@@ -17,7 +17,8 @@
         "content-type" => $this->contentType,
         "method" => $this->method,
         "url" => $this->url,
-        "resource" => $this->resource
+        "resource" => $this->resource,
+        "headers" => $this->headers,
       );
     }
     
@@ -37,6 +38,8 @@
       if (isset($req['CONTENT_TYPE'])) {
         $this->contentType = strtolower(trim($req['CONTENT_TYPE']));
       }
+      
+      $this->headers = getallheaders();
     }
     
     public function parseBody(): array

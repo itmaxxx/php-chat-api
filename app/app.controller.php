@@ -50,6 +50,10 @@
     {
       switch ($this->req['method']) {
         case 'GET':
+          if ($this->req['resource'] === '/api/users/me') {
+            $this->usersController->getMe($this->req['headers']['Authorization']);
+            return;
+          }
           // /users/:userId
           if (strpos($this->req['resource'], '/api/users/') === 0) {
             $this->usersController->getUserById($this->req);

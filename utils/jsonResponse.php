@@ -1,6 +1,6 @@
 <?php
   
-  function jsonResponse($data, $statusCode = 200)
+  function jsonResponse($data, $statusCode = 200): array
   {
     header('Content-Type: application/json');
     http_response_code($statusCode);
