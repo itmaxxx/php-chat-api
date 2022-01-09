@@ -6,6 +6,7 @@
   @include_once "./users/users.controller.php";
   @include_once "./db/db.controller.php";
   @include_once "./auth/auth.controller.php";
+  @include_once "./guards/jwtAuthGuard.php";
   
   class AppController
   {
@@ -13,12 +14,15 @@
     private $conn;
     # Request object
     private $_req;
-    # Parsed request
+    # Request array returned by getRequest() method
+    # Also, note that id doesn't contain user unless you update its value manually
     private $req;
     # Controllers
     private $dbController;
     private $usersController;
     private $authController;
+    # Guards
+    private $jwtAuthGuard;
     
     function __construct($dbConfig)
     {
@@ -32,6 +36,9 @@
       # Initialize controllers
       $this->usersController = new UsersController($this->conn);
       $this->authController = new AuthController($this->conn);
+      
+      # Initialize guards
+      $this->jwtAuthGuard = new JwtAuthGuard(new UsersService($this->conn));
       
       # Parse request
       $this->_req = new Request($_SERVER);
@@ -51,7 +58,8 @@
       switch ($this->req['method']) {
         case 'GET':
           if ($this->req['resource'] === '/api/users/me') {
-            $this->usersController->getMe($this->req['headers']['Authorization']);
+            $this->_req->useGuard($this->jwtAuthGuard);
+            $this->usersController->getMe($this->_req->getRequest());
             return;
           }
           // /users/:userId

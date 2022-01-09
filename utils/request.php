@@ -1,10 +1,11 @@
 <?php
   
-  @include_once "./httpException.php";
+  @include_once __DIR__ . "/httpException.php";
+  @include_once __DIR__ . "/../locale/en/messages.php";
   
   class Request
   {
-    private $contentType, $method, $url, $resource, $headers;
+    private $contentType, $method, $url, $resource, $headers, $user = null;
     
     public function __construct($req)
     {
@@ -39,6 +40,7 @@
         "url" => $this->url,
         "resource" => $this->resource,
         "headers" => $this->headers,
+        "user" => $this->user,
       ];
     }
     
@@ -63,5 +65,21 @@
       }
       
       return ["body" => $body, "data" => $data];
+    }
+    
+    public function setUser($user)
+    {
+      $this->user = $user;
+    }
+    
+    public function useGuard($guard)
+    {
+      global $messages;
+      
+      $isAuthorized = $guard->canActivate($this);
+      
+      if (!$isAuthorized) {
+        httpException($messages["not_authenticated"], 401)['end']();
+      }
     }
   }
