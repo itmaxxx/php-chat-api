@@ -1,6 +1,7 @@
 <?php
   
   @include_once("./fixtures/users.php");
+  @include_once("./fixtures/chats.php");
   
   class DbController
   {
@@ -10,18 +11,15 @@
     {
       $this->connectToDb($dbConfig);
       
-      $this->drop(['Users']);
+      // TODO: Don't run this if we are in prod mode
+      $this->drop(['Users', 'Chats']);
       
       $this->initialize();
       
-      # Include $usersFixtures from global scope here
-      global $usersFixtures;
+      # Include fixtures from global scope here
+      global $usersFixtures, $chatsFixtures;
       $this->seed('Users', ["id", "username", "password"], $usersFixtures);
-    }
-    
-    public function getConnection()
-    {
-      return $this->conn;
+      $this->seed('Chats', ["id", "name", "private", "inviteLink"], $chatsFixtures);
     }
     
     private function connectToDb(array $dbConfig)
@@ -35,30 +33,6 @@
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
       } catch (Exception $ex) {
         httpException($ex->getMessage(), 500)['end']();
-      }
-    }
-    
-    /**
-     *  Seeds data from array in specified table and columns
-     * @param {string}   $table    Table name where we want to seed data
-     * @param {string[]} $columns  Array of fields names we want to insert
-     * @param {object[]} $fixtures Array of fixtures with fields from $fields in same order
-     */
-    public function seed(string $table, array $columns, array $fixtures)
-    {
-      try {
-        $columnsString = implode(",", $columns);
-        
-        foreach ($fixtures as $fixture) {
-          $fixtureKeys = array_keys($fixture);
-          $fixtureKeysString = ":" . implode(", :", $fixtureKeys);
-          
-          $sql = "INSERT INTO $table ($columnsString) VALUES ($fixtureKeysString)";
-          
-          $this->conn->prepare($sql)->execute($fixture);
-        }
-      } catch (Exception $ex) {
-        httpException("Failed to seed db, table '$table'", 500)['end']();
       }
     }
     
@@ -118,5 +92,34 @@
       } catch (Exception $ex) {
         httpException("Failed to initialize db", 500);
       }
+    }
+    
+    /**
+     *  Seeds data from array in specified table and columns
+     * @param {string}   $table    Table name where we want to seed data
+     * @param {string[]} $columns  Array of fields names we want to insert
+     * @param {object[]} $fixtures Array of fixtures with fields from $fields in same order
+     */
+    public function seed(string $table, array $columns, array $fixtures)
+    {
+      try {
+        $columnsString = implode(",", $columns);
+        
+        foreach ($fixtures as $fixture) {
+          $fixtureKeys = array_keys($fixture);
+          $fixtureKeysString = ":" . implode(", :", $fixtureKeys);
+          
+          $sql = "INSERT INTO $table ($columnsString) VALUES ($fixtureKeysString)";
+          
+          $this->conn->prepare($sql)->execute($fixture);
+        }
+      } catch (Exception $ex) {
+        httpException("Failed to seed db, table '$table'", 500)['end']();
+      }
+    }
+    
+    public function getConnection()
+    {
+      return $this->conn;
     }
   }
