@@ -84,9 +84,10 @@
       $body = json_encode($options["json"], JSON_UNESCAPED_UNICODE);
       
       curl_setopt($req, CURLOPT_POSTFIELDS, $body);
-      curl_setopt($req, CURLOPT_HTTPHEADER, array(
+      curl_setopt($req, CURLOPT_HTTPHEADER, [
           'Content-Type: application/json',
-          'Content-Length: ' . strlen($body))
+          'Content-Length: ' . strlen($body)
+        ]
       );
     }
     

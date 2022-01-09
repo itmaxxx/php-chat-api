@@ -18,9 +18,9 @@
     {
       $users = $this->usersService->getUsers();
       
-      $response = array(
+      $response = [
         "users" => $users
-      );
+      ];
       
       jsonResponse($response)['end']();
     }
@@ -38,9 +38,9 @@
         httpException($messages["user_not_found"], 404)['end']();
       }
       
-      $response = array(
+      $response = [
         "user" => $this->usersService->createUserRO($user)
-      );
+      ];
       
       jsonResponse($response)['end']();
     }
@@ -53,15 +53,44 @@
         httpException("Failed to create user")['end']();
       }
       
-      $response = array(
+      $response = [
         "message" => "User created",
         "user" => $result
-      );
+      ];
       
       jsonResponse($response)['end']();
     }
     
-    function getMe($bearer) {
-      var_dump($bearer);
+    function getMe($bearer)
+    {
+      global $messages;
+      
+      $isValidBearer = strpos($bearer, "Bearer ");
+      
+      if (!$isValidBearer && $isValidBearer !== 0) {
+        httpException($messages["not_authenticated"], 401)['end']();
+      }
+      
+      // 7 - is "Bearer " string length
+      $jwt = substr($bearer, 7);
+      
+      if (strlen($jwt) <= 0) {
+        httpException($messages["not_authenticated"], 401)['end']();
+      }
+      
+      $decodedJwt = [];
+      
+      try {
+        $decodedJwt = jwtDecode($jwt);
+      } catch (Exception $exception) {
+        httpException($messages["not_authenticated"], 401)['end']();
+      }
+      
+      # Get user from db
+      $user = $this->usersService->getUserById($decodedJwt->id);
+      
+      $response = ["user" => $this->usersService->createUserRO($user)];
+      
+      jsonResponse($response);
     }
   }

@@ -11,17 +11,6 @@
       $this->parseRequest($req);
     }
     
-    public function getRequest(): array
-    {
-      return array(
-        "content-type" => $this->contentType,
-        "method" => $this->method,
-        "url" => $this->url,
-        "resource" => $this->resource,
-        "headers" => $this->headers,
-      );
-    }
-    
     private function parseRequest($req)
     {
       $this->method = $req['REQUEST_METHOD'];
@@ -42,12 +31,23 @@
       $this->headers = getallheaders();
     }
     
+    public function getRequest(): array
+    {
+      return [
+        "content-type" => $this->contentType,
+        "method" => $this->method,
+        "url" => $this->url,
+        "resource" => $this->resource,
+        "headers" => $this->headers,
+      ];
+    }
+    
     public function parseBody(): array
     {
       # Parsed body
-      $body = array();
+      $body = [];
       # Parsed json from body
-      $data = array();
+      $data = [];
       
       if ($this->contentType == 'application/json') {
         $body = file_get_contents("php://input");
@@ -62,6 +62,6 @@
         httpException("Unsupported Content-Type $this->contentType")['end']();
       }
       
-      return array("body" => $body, "data" => $data);
+      return ["body" => $body, "data" => $data];
     }
   }

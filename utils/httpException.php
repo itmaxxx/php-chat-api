@@ -4,5 +4,5 @@
   
   function httpException($data, $statusCode = 400): array
   {
-    return jsonResponse(array("error" => $data), $statusCode);
+    return jsonResponse(["error" => $data], $statusCode);
   }

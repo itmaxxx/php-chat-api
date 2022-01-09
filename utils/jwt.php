@@ -7,10 +7,15 @@
   
   function signJwtForUser($user): string
   {
-    $jwtPayload = array(
+    if (is_null($user["id"])) {
+      throw new Exception("Used id not set");
+    }
+    
+    $jwtPayload = [
+      "id" => $user["id"],
       "username" => $user["username"],
       "createdAt" => time(),
-    );
+    ];
   
     return jwtEncode($jwtPayload);
   }
@@ -25,10 +30,7 @@
   function jwtDecode($jwt): object
   {
     global $key;
-    
-    $decoded = JWT::decode($jwt, new Key($key, 'HS256'));
-    print_r($decoded);
-    
-    return $decoded;
+  
+    return JWT::decode($jwt, new Key($key, 'HS256'));
   }
 

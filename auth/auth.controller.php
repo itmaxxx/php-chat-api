@@ -38,11 +38,13 @@
         httpException($messages["failed_to_sign_up"])['end']();
       }
       
-      $jwt = signJwtForUser($registerUserDto);
+      $createdUser = $this->usersService->getUserById($id);
       
-      $response = array(
+      $jwt = signJwtForUser($createdUser);
+      
+      $response = [
         "jwt" => $jwt
-      );
+      ];
       
       return jsonResponse($response);
     }
@@ -66,9 +68,9 @@
       
       $jwt = signJwtForUser($foundUser);
       
-      $response = array(
+      $response = [
         "jwt" => $jwt
-      );
+      ];
       
       return jsonResponse($response);
     }
