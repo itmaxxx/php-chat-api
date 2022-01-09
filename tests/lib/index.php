@@ -71,7 +71,7 @@
     }
   }
   
-  function request($method, $url, $json = NULL): array
+  function request($method, $url, array $options = null): array
   {
     $req = curl_init();
     
@@ -80,14 +80,18 @@
     curl_setopt($req, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($req, CURLOPT_FRESH_CONNECT, true);
     
-    if ($json) {
-      $body = json_encode($json, JSON_UNESCAPED_UNICODE);
+    if ($options["json"]) {
+      $body = json_encode($options["json"], JSON_UNESCAPED_UNICODE);
       
       curl_setopt($req, CURLOPT_POSTFIELDS, $body);
       curl_setopt($req, CURLOPT_HTTPHEADER, array(
           'Content-Type: application/json',
           'Content-Length: ' . strlen($body))
       );
+    }
+    
+    if ($options["headers"]) {
+      curl_setopt($req, CURLOPT_HTTPHEADER, $options["headers"]);
     }
     
     $response = curl_exec($req);

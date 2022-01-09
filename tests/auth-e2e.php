@@ -16,11 +16,11 @@
         "password" => "password"
       ];
       
-      $response = request("POST", $testsConfig["host"] . "/api/auth/sign-up", $body);
+      $response = request("POST", $testsConfig["host"] . "/api/auth/sign-up", ["json" => $body]);
       // TODO: Catch json decode error here or move this logic to function in tests lib
       //       Because in case we failed to decode json we should show response text
       $json = json_decode($response['data']);
-  
+      
       assertStrict($response['info']['http_code'], 200);
       assertStrict(strlen($json->data->jwt) > 0, true);
     });
@@ -33,9 +33,9 @@
         "password" => "password"
       ];
       
-      $response = request("POST", $testsConfig["host"] . "/api/auth/sign-up", $body);
+      $response = request("POST", $testsConfig["host"] . "/api/auth/sign-up", ["json" => $body]);
       $json = json_decode($response['data']);
-  
+      
       assertStrict($response['info']['http_code'], 400);
       assertStrict($json->data->error, $messages["username_taken"]);
     });
@@ -50,24 +50,24 @@
         "password" => $MaxDmitriev["password"]
       ];
       
-      $response = request("POST", $testsConfig["host"] . "/api/auth/sign-in", $body);
+      $response = request("POST", $testsConfig["host"] . "/api/auth/sign-in", ["json" => $body]);
       $json = json_decode($response['data']);
-  
+      
       assertStrict($response['info']['http_code'], 200);
       assertStrict(strlen($json->data->jwt) > 0, true);
     });
-  
+    
     it("should return error when password doesnt match", function () {
       global $testsConfig, $MaxDmitriev, $messages;
-    
+      
       $body = [
         "username" => $MaxDmitriev["username"],
         "password" => "random_password"
       ];
-    
-      $response = request("POST", $testsConfig["host"] . "/api/auth/sign-in", $body);
+      
+      $response = request("POST", $testsConfig["host"] . "/api/auth/sign-in", ["json" => $body]);
       $json = json_decode($response['data']);
-    
+      
       assertStrict($response['info']['http_code'], 401);
       assertStrict($json->data->error, $messages["failed_to_sign_in"]);
     });
@@ -80,9 +80,9 @@
         "password" => "password"
       ];
       
-      $response = request("POST", $testsConfig["host"] . "/api/auth/sign-in", $body);
+      $response = request("POST", $testsConfig["host"] . "/api/auth/sign-in", ["json" => $body]);
       $json = json_decode($response['data']);
-  
+      
       assertStrict($response['info']['http_code'], 400);
       assertStrict($json->data->error, $messages["user_not_found"]);
     });
