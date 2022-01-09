@@ -6,6 +6,8 @@
   @include_once __DIR__ . "/lib/index.php";
   @include_once __DIR__ . "/../fixtures/users.php";
   @include_once __DIR__ . "/../locale/en/messages.php";
+  @include_once __DIR__ . "/../vendor/autoload.php";
+  @include_once __DIR__ . "/../utils/jwt.php";
   
   describe("[GET] /api/users", function () {
     it("should get users list", function () {
@@ -43,7 +45,46 @@
       assertStrict($response['info']['http_code'], 404);
       assertStrict($json->data->error, $messages["user_not_found"]);
     });
-  })
+  });
+  
+  describe("[GET] /api/users/me", function () {
+    it("should get current user info", function () {
+      global $testsConfig, $MaxDmitriev;
+      
+      $jwt = signJwtForUser($MaxDmitriev);
+    
+      $response = request("GET", $testsConfig["host"] . "/api/users/me", ["headers" => ["Authorization: Bearer $jwt"]]);
+      $json = json_decode($response['data']);
+//      var_dump($response);
+//      var_dump($json);
+      $userData = $json->data->user;
+    
+      assertStrict($response['info']['http_code'], 200);
+      assertStrict(intval($userData->id), $MaxDmitriev["id"]);
+      assertStrict($userData->username, $MaxDmitriev["username"]);
+      assertStrict(isset($userData->password), false);
+    });
+  
+    it("should return not authenticated when not valid jwt passed", function () {
+      global $testsConfig, $messages;
+    
+      $response = request("GET", $testsConfig["host"] . "/api/users/me", ["headers" => ["Authorization: Bearer not_valid_jwt"]]);
+      $json = json_decode($response['data']);
+    
+      assertStrict($response['info']['http_code'], 401);
+      assertStrict($json->data->error, $messages["not_authenticated"]);
+    });
+  
+    it("should return not authenticated when no authorization header passed", function () {
+      global $testsConfig, $messages;
+    
+      $response = request("GET", $testsConfig["host"] . "/api/users/me");
+      $json = json_decode($response['data']);
+    
+      assertStrict($response['info']['http_code'], 401);
+      assertStrict($json->data->error, $messages["not_authenticated"]);
+    });
+  });
 
 ?>
 </pre>
