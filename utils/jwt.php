@@ -5,6 +5,16 @@
   
   $key = "jwt_secret_key";
   
+  function signJwtForUser($user): string
+  {
+    $jwtPayload = array(
+      "username" => $user["username"],
+      "createdAt" => time(),
+    );
+  
+    return jwtEncode($jwtPayload);
+  }
+  
   function jwtEncode($payload): string
   {
     global $key;

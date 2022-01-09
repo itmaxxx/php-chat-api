@@ -38,12 +38,7 @@
         httpException($messages["failed_to_sign_up"])['end']();
       }
       
-      $jwtPayload = array(
-        "username" => $registerUserDto["username"],
-        "createdAt" => time()
-      );
-      
-      $jwt = jwtEncode($jwtPayload);
+      $jwt = signJwtForUser($registerUserDto);
       
       $response = array(
         "jwt" => $jwt
@@ -69,12 +64,7 @@
         httpException($messages["failed_to_sign_in"], 401)['end']();
       }
       
-      $jwtPayload = array(
-        "username" => $foundUser["username"],
-        "createdAt" => time()
-      );
-      
-      $jwt = jwtEncode($jwtPayload);
+      $jwt = signJwtForUser($foundUser);
       
       $response = array(
         "jwt" => $jwt
