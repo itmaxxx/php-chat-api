@@ -87,13 +87,32 @@
         # Create Users table
         $users = <<<SQL
         CREATE TABLE IF NOT EXISTS Users (
-          id BIGINT PRIMARY KEY, 
+          id BIGINT PRIMARY KEY,
           username VARCHAR(20) UNIQUE NOT NULL,
           fullname VARCHAR(30) NULL,
           password VARCHAR(30) NOT NULL,
           profileImage VARCHAR(128) NULL,
           description VARCHAR(256) NULL
         );
+
+        CREATE TABLE IF NOT EXISTS Chats (
+          id BIGINT PRIMARY KEY,
+          image VARCHAR(128) NULL,
+          name VARCHAR(30) NOT NULL,
+          private BOOLEAN NOT NULL DEFAULT TRUE,
+          inviteLink VARCHAR(30) NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS ChatParticipants (
+          chatFk BIGINT NOT NULL,
+          userFk BIGINT NOT NULL,
+          permission TINYINT NOT NULL DEFAULT 0,
+          FOREIGN KEY (chatFk) REFERENCES Chats (id),
+          FOREIGN KEY (userFk) REFERENCES Users (id)
+        );
+        
+        ALTER TABLE ChatParticipants DROP CONSTRAINT unique_chat_user;
+        ALTER TABLE ChatParticipants ADD UNIQUE unique_chat_user(chatFk, userFk);
       SQL;
         $this->conn->exec($users);
       } catch (Exception $ex) {
