@@ -17,9 +17,10 @@
       $this->initialize();
       
       # Include fixtures from global scope here
-      global $usersFixtures, $chatsFixtures;
-      $this->seed('Users', ["id", "username", "password"], $usersFixtures);
-      $this->seed('Chats', ["id", "name", "private", "inviteLink"], $chatsFixtures);
+      global $usersFixtures, $chatsFixtures, $chatParticipantsFixtures;
+      $this->seed('Users', $usersFixtures);
+      $this->seed('Chats', $chatsFixtures);
+      $this->seed('ChatParticipants', $chatParticipantsFixtures);
     }
     
     private function connectToDb(array $dbConfig)
@@ -100,13 +101,12 @@
      * @param {string[]} $columns  Array of fields names we want to insert
      * @param {object[]} $fixtures Array of fixtures with fields from $fields in same order
      */
-    public function seed(string $table, array $columns, array $fixtures)
+    public function seed(string $table, array $fixtures)
     {
       try {
-        $columnsString = implode(",", $columns);
-        
         foreach ($fixtures as $fixture) {
           $fixtureKeys = array_keys($fixture);
+          $columnsString = implode(",", $fixtureKeys);
           $fixtureKeysString = ":" . implode(", :", $fixtureKeys);
           
           $sql = "INSERT INTO $table ($columnsString) VALUES ($fixtureKeysString)";
