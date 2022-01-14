@@ -2,6 +2,7 @@
   
   @include_once("./fixtures/users.php");
   @include_once("./fixtures/chats.php");
+  @include_once("./fixtures/chatParticipants.php");
   
   class DbController
   {
@@ -82,8 +83,8 @@
           chatFk BIGINT NOT NULL,
           userFk BIGINT NOT NULL,
           permission TINYINT NOT NULL DEFAULT 0,
-          FOREIGN KEY (chatFk) REFERENCES Chats (id) ON DELETE CASCADE,
-          FOREIGN KEY (userFk) REFERENCES Users (id) ON DELETE CASCADE
+          FOREIGN KEY (chatFk) REFERENCES Chats (id),
+          FOREIGN KEY (userFk) REFERENCES Users (id)
         );
         
         -- ALTER TABLE ChatParticipants DROP CONSTRAINT unique_chat_user;
