@@ -11,8 +11,8 @@
     {
       $this->connectToDb($dbConfig);
       
-      // TODO: Don't run this if we are in prod mode
-      $this->drop(['Users', 'Chats']);
+      // TODO: Don't run this if we are in production mode
+      $this->drop(['ChatParticipants', 'Users', 'Chats']);
       
       $this->initialize();
       
@@ -81,11 +81,11 @@
           chatFk BIGINT NOT NULL,
           userFk BIGINT NOT NULL,
           permission TINYINT NOT NULL DEFAULT 0,
-          FOREIGN KEY (chatFk) REFERENCES Chats (id),
-          FOREIGN KEY (userFk) REFERENCES Users (id)
+          FOREIGN KEY (chatFk) REFERENCES Chats (id) ON DELETE CASCADE,
+          FOREIGN KEY (userFk) REFERENCES Users (id) ON DELETE CASCADE
         );
         
-        ALTER TABLE ChatParticipants DROP CONSTRAINT unique_chat_user;
+        -- ALTER TABLE ChatParticipants DROP CONSTRAINT unique_chat_user;
         ALTER TABLE ChatParticipants ADD UNIQUE unique_chat_user(chatFk, userFk);
       SQL;
         $this->conn->exec($users);
