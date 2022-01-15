@@ -75,7 +75,7 @@
           id BIGINT PRIMARY KEY,
           image VARCHAR(128) NULL,
           name VARCHAR(30) NOT NULL,
-          private BOOLEAN NOT NULL DEFAULT TRUE,
+          isPrivate BOOLEAN NOT NULL DEFAULT TRUE,
           inviteLink VARCHAR(30) NOT NULL
         );
 
