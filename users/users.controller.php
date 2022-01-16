@@ -47,14 +47,16 @@
     
     function createUser($userDto)
     {
+      global $messages;
+
       $result = $this->usersService->createUser($userDto);
       
       if (!$result) {
-        httpException("Failed to create user")['end']();
+        httpException($messages["failed_to_create_user"])['end']();
       }
       
       $response = [
-        "message" => "User created",
+        "message" => $messages["user_created"],
         "user" => $result
       ];
       
