@@ -11,7 +11,7 @@
     
     function __construct($conn)
     {
-      $this->chatsService = new UsersService($conn);
+      $this->chatsService = new ChatsService($conn);
     }
     
     function getChats()
@@ -31,9 +31,15 @@
       
       # Parse chat id from url
       $chatId = intval(substr($req['resource'], strlen('/api/chats/')));
-      
+
+      $chat = $this->chatsService->findById($chatId);
+
+      if (is_null($chat)) {
+        httpException($messages["chat_not_found"], 404)['end']();
+      }
+
       $response = [
-        "chat" => []
+        "chat" => $chat
       ];
       
       jsonResponse($response)['end']();
@@ -41,9 +47,17 @@
     
     function createChat($chatDto)
     {
+      global $messages;
+
+      $result = $this->chatsService->createChat($chatDto);
+
+      if (!$result) {
+        httpException($messages["failed_to_create_chat"])['end']();
+      }
+
       $response = [
-        "message" => "Chat created",
-        "chat" => []
+        "message" => $messages["chat_created"],
+        "chat" => $result
       ];
       
       jsonResponse($response)['end']();
