@@ -43,7 +43,7 @@
       }
 
       $response = [
-        "chat" => $chat
+        "chat" => $this->chatsService->createChatRO($chat)
       ];
       
       jsonResponse($response)['end']();

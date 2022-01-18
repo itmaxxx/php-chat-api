@@ -46,4 +46,25 @@
         return null;
       }
     }
+    
+    function isUserChatParticipant($userId, $chatId): bool
+    {
+      $sql = "SELECT * FROM ChatParticipants WHERE userId=:userId AND chatId=:chatId";
+      $stmt = $this->conn->prepare($sql);
+      $stmt->bindValue(":userId", $userId);
+      $stmt->bindValue(":chatId", $chatId);
+      $stmt->execute();
+  
+      return $stmt->rowCount() > 0;
+    }
+  
+    function createChatRO($chat)
+    {
+      $chatRO = $chat;
+    
+      unset($chatRO["isPrivate"]);
+      unset($chatRO["inviteLink"]);
+    
+      return $chatRO;
+    }
   }
