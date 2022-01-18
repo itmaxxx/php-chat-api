@@ -13,7 +13,7 @@
       $this->connectToDb($dbConfig);
       
       // TODO: Don't run this if we are in production mode
-      $this->drop(['ChatParticipants', 'Users', 'Chats']);
+      $this->dropTables(['ChatParticipants', 'Users', 'Chats']);
       
       $this->initialize();
       
@@ -42,7 +42,7 @@
      *  Drop specified table in DB
      * @param {string[]} $tables Array of tables names
      */
-    private function drop($tables)
+    private function dropTables($tables)
     {
       try {
         foreach ($tables as $table) {
@@ -50,7 +50,7 @@
           $this->conn->exec($sql);
         }
       } catch (Exception $ex) {
-        httpException("Failed to drop db", 500);
+        httpException("Failed to drop db tables", 500);
       }
     }
     
@@ -80,15 +80,15 @@
         );
 
         CREATE TABLE IF NOT EXISTS ChatParticipants (
-          chatFk BIGINT NOT NULL,
-          userFk BIGINT NOT NULL,
+          chatId BIGINT NOT NULL,
+          userId BIGINT NOT NULL,
           permission TINYINT NOT NULL DEFAULT 0,
-          FOREIGN KEY (chatFk) REFERENCES Chats (id),
-          FOREIGN KEY (userFk) REFERENCES Users (id)
+          FOREIGN KEY (chatId) REFERENCES Chats (id),
+          FOREIGN KEY (userId) REFERENCES Users (id)
         );
         
         -- ALTER TABLE ChatParticipants DROP CONSTRAINT unique_chat_user;
-        ALTER TABLE ChatParticipants ADD UNIQUE unique_chat_user(chatFk, userFk);
+        ALTER TABLE ChatParticipants ADD UNIQUE unique_chat_user(chatId, userId);
       SQL;
         $this->conn->exec($users);
       } catch (Exception $ex) {

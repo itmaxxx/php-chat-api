@@ -6,14 +6,14 @@
   global $MaxAndIlyaChat, $MaxDmitriev, $IlyaMehof;
   
   $MaxInChatWithIlya = [
-    "chatFk" => $MaxAndIlyaChat["id"],
-    "userFk" => $MaxDmitriev["id"],
+    "chatId" => $MaxAndIlyaChat["id"],
+    "userId" => $MaxDmitriev["id"],
     "permission" => 2
   ];
   
   $IlyaInChatWithMax = [
-    "chatFk" => $MaxAndIlyaChat["id"],
-    "userFk" => $IlyaMehof["id"],
+    "chatId" => $MaxAndIlyaChat["id"],
+    "userId" => $IlyaMehof["id"],
     "permission" => 2
   ];
   
