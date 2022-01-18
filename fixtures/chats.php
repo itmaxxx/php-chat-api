@@ -14,5 +14,13 @@
     "inviteLink" => "oralcmsht"
   ];
   
-  $chatsFixtures = [$MaxAndIlyaChat, $GymPartyPublicChat];
+  $DeletedChatWithMaxAndMatvey = [
+    "id" => 3,
+    "name" => "No one should see this chat",
+    "isPrivate" => 1,
+    "isDeleted" => 1,
+    "inviteLink" => "bebra_lovers"
+  ];
+  
+  $chatsFixtures = [$MaxAndIlyaChat, $GymPartyPublicChat, $DeletedChatWithMaxAndMatvey];
   
