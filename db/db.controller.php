@@ -76,6 +76,7 @@
           image VARCHAR(128) NULL,
           name VARCHAR(30) NOT NULL,
           isPrivate BOOLEAN NOT NULL DEFAULT TRUE,
+          isDeleted BOOLEAN DEFAULT FALSE,
           inviteLink VARCHAR(30) NOT NULL
         );
 
