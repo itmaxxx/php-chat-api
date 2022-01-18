@@ -3,7 +3,7 @@
   $MaxAndIlyaChat = [
     "id" => 1,
     "name" => "First private chat",
-    "private" => true,
+    "isPrivate" => true,
     "inviteLink" => "invite_link"
   ];
   
