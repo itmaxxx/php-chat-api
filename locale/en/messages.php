@@ -8,6 +8,8 @@
 
     "user_created" => "User created",
     "chat_created" => "Chat created",
+    
+    "chat_deleted" => "Chat deleted",
 
     "failed_to_create_user" => "Failed to create user",
     "failed_to_create_chat" => "Failed to create chat",
