@@ -15,4 +15,5 @@
     "failed_to_sign_up" => "Failed to sign up",
 
     "not_authenticated" => "Not authenticated",
+    "no_access_to_the_chat" => "You do not have access to the chat"
   ];

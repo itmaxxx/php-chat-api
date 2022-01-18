@@ -37,6 +37,10 @@
       if (is_null($chat)) {
         httpException($messages["chat_not_found"], 404)['end']();
       }
+      
+      if ($chat["isPrivate"] && !$this->chatsService->isUserChatParticipant($req["user"]["id"], $chatId)) {
+        httpException($messages["no_access_to_the_chat"], 401)['end']();
+      }
 
       $response = [
         "chat" => $chat

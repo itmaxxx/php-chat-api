@@ -34,13 +34,10 @@
       $jwt = signJwtForUser($MatveyGorelik);
     
       $response = request("GET", $testsConfig["host"] . "/api/chats/" . $MaxAndIlyaChat["id"], ["headers" => ["Authorization: Bearer $jwt"]]);
-    
       $json = json_decode($response['data']);
     
       assertStrict($response['info']['http_code'], 401);
-      assertStrict($json->data->error, $messages["not_authenticated"]);
-      assertStrict(isset($chatData->isPrivate), false);
-      assertStrict(isset($chatData->inviteLink), false);
+      assertStrict($json->data->error, $messages["no_access_to_the_chat"]);
     });
   
     it("should get public chat by id", function () {

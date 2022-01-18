@@ -77,7 +77,7 @@
           # /chats/:chatId
           if (strpos($this->req['resource'], '/api/chats/') === 0) {
             $this->_req->useGuard($this->jwtAuthGuard);
-            $this->chatsController->getChatById($this->req);
+            $this->chatsController->getChatById($this->_req->getRequest());
             return;
           }
           
