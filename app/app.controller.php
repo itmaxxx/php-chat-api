@@ -5,6 +5,7 @@
   @include_once "./utils/request.php";
   @include_once "./users/users.controller.php";
   @include_once "./db/db.controller.php";
+  @include_once "./chats/chats.controller.php";
   @include_once "./auth/auth.controller.php";
   @include_once "./guards/jwtAuthGuard.php";
   
@@ -20,6 +21,7 @@
     # Controllers
     private $dbController;
     private $usersController;
+    private $chatsController;
     private $authController;
     # Guards
     private $jwtAuthGuard;
@@ -36,6 +38,7 @@
       # Initialize controllers
       $this->usersController = new UsersController($this->conn);
       $this->authController = new AuthController($this->conn);
+      $this->chatsController = new ChatsController($this->conn);
       
       # Initialize guards
       $this->jwtAuthGuard = new JwtAuthGuard(new UsersService($this->conn));
@@ -62,13 +65,19 @@
             $this->usersController->getMe($this->_req->getRequest());
             return;
           }
-          // /users/:userId
+          # /users/:userId
           if (strpos($this->req['resource'], '/api/users/') === 0) {
             $this->usersController->getUserById($this->req);
             return;
           }
           if ($this->req['resource'] === '/api/users') {
             $this->usersController->getUsers();
+            return;
+          }
+          # /chats/:chatId
+          if (strpos($this->req['resource'], '/api/chats/') === 0) {
+            $this->_req->useGuard($this->jwtAuthGuard);
+            $this->chatsController->getChatById($this->req);
             return;
           }
           
