@@ -3,9 +3,16 @@
   $MaxAndIlyaChat = [
     "id" => 1,
     "name" => "First private chat",
-    "isPrivate" => true,
+    "isPrivate" => 1,
     "inviteLink" => "invite_link"
   ];
   
-  $chatsFixtures = [$MaxAndIlyaChat];
+  $GymPartyPublicChat = [
+    "id" => 2,
+    "name" => "Welcome to the club buddy",
+    "isPrivate" => 0,
+    "inviteLink" => "oralcmsht"
+  ];
+  
+  $chatsFixtures = [$MaxAndIlyaChat, $GymPartyPublicChat];
   
