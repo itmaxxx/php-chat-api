@@ -14,4 +14,10 @@
     "password" => $plainPassword
   ];
   
-  $usersFixtures = [$MaxDmitriev, $IlyaMehof];
+  $MatveyGorelik = [
+    "id" => 3,
+    "username" => "offiza",
+    "password" => $plainPassword
+  ];
+  
+  $usersFixtures = [$MaxDmitriev, $IlyaMehof, $MatveyGorelik];
