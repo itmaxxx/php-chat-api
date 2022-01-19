@@ -61,18 +61,17 @@
       switch ($this->req['method'])
       {
         case 'GET':
-          var_dump(preg_match("\/api\/users\/([a-zA-Z0-9].+)\/chats", $this->req['resource']));
-
           if ($this->req['resource'] === '/api/users/me')
           {
             $this->_req->useGuard($this->jwtAuthGuard);
             $this->usersController->getMe($this->_req->getRequest());
             return;
           }
-          # /users/:userId/chats
-          if (preg_match("\/api\/users\/([a-zA-Z0-9].+)\/chats", $this->req['resource']))
+          # /users/me/chats
+          if ($this->req['resource'] === '/api/users/me/chats')
           {
-            $this->usersController->getUserChats($this->req);
+            $this->_req->useGuard($this->jwtAuthGuard);
+            $this->usersController->getUserChats($this->_req->getRequest());
             return;
           }
           # /users/:userId

@@ -69,4 +69,9 @@
       
       jsonResponse($response);
     }
+    
+    function getUserChats($req)
+    {
+      var_dump($req["user"]);
+    }
   }
