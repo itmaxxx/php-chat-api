@@ -58,24 +58,37 @@
     
     private function router()
     {
-      switch ($this->req['method']) {
+      switch ($this->req['method'])
+      {
         case 'GET':
-          if ($this->req['resource'] === '/api/users/me') {
+          var_dump(preg_match("\/api\/users\/([a-zA-Z0-9].+)\/chats", $this->req['resource']));
+
+          if ($this->req['resource'] === '/api/users/me')
+          {
             $this->_req->useGuard($this->jwtAuthGuard);
             $this->usersController->getMe($this->_req->getRequest());
             return;
           }
+          # /users/:userId/chats
+          if (preg_match("\/api\/users\/([a-zA-Z0-9].+)\/chats", $this->req['resource']))
+          {
+            $this->usersController->getUserChats($this->req);
+            return;
+          }
           # /users/:userId
-          if (strpos($this->req['resource'], '/api/users/') === 0) {
+          if (strpos($this->req['resource'], '/api/users/') === 0)
+          {
             $this->usersController->getUserById($this->req);
             return;
           }
-          if ($this->req['resource'] === '/api/users') {
+          if ($this->req['resource'] === '/api/users')
+          {
             $this->usersController->getUsers();
             return;
           }
           # /chats/:chatId
-          if (strpos($this->req['resource'], '/api/chats/') === 0) {
+          if (strpos($this->req['resource'], '/api/chats/') === 0)
+          {
             $this->_req->useGuard($this->jwtAuthGuard);
             $this->chatsController->getChatById($this->_req->getRequest());
             return;
@@ -89,15 +102,18 @@
         case 'POST':
           $reqBody = $this->_req->parseBody();
           
-          if ($this->req['resource'] === '/api/users') {
+          if ($this->req['resource'] === '/api/users')
+          {
             $this->usersController->createUser($reqBody["data"]);
             return;
           }
-          if ($this->req['resource'] === '/api/auth/sign-up') {
+          if ($this->req['resource'] === '/api/auth/sign-up')
+          {
             $this->authController->signUp($reqBody["data"]);
             return;
           }
-          if ($this->req['resource'] === '/api/auth/sign-in') {
+          if ($this->req['resource'] === '/api/auth/sign-in')
+          {
             $this->authController->signIn($reqBody["data"]);
             return;
           }
