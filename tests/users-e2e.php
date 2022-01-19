@@ -83,6 +83,20 @@
       assertStrict($json->data->error, $messages["not_authenticated"]);
     });
   });
+  
+  describe("[GET] /api/users/me/chats", function () {
+    it("should get current user chats", function () {
+      global $testsConfig, $MaxDmitriev;
+  
+      $jwt = signJwtForUser($MaxDmitriev);
+  
+      $response = request("GET", $testsConfig["host"] . "/api/users/me/chats", ["headers" => ["Authorization: Bearer $jwt"]]);
+      $json = json_decode($response['data']);
+      $chats = $json->data->chats;
+  
+      assertStrict($response['info']['http_code'], 200);
+    });
+  });
 
 ?>
 </pre>
