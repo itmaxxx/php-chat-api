@@ -35,7 +35,7 @@
     
     function findById($id)
     {
-      $sql = "SELECT * FROM Chats WHERE id=:id";
+      $sql = "SELECT * FROM Chats WHERE id=:id AND isDeleted=FALSE";
       $stmt = $this->conn->prepare($sql);
       $stmt->bindValue(":id", $id);
       $stmt->execute();
