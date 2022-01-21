@@ -16,7 +16,7 @@
       $stmt->execute();
 
       if ($stmt->rowCount() > 0) {
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
       } else {
         return [];
       }
@@ -66,5 +66,19 @@
       unset($chatRO["inviteLink"]);
     
       return $chatRO;
+    }
+    
+    function getUserChats($userId): array
+    {
+      $sql = "SELECT C.id AS id, C.image AS image, C.name AS name FROM Chats AS C, ChatParticipants AS CP WHERE CP.userId=:userId AND CP.chatId=C.id AND C.isDeleted=FALSE";
+      $stmt = $this->conn->prepare($sql);
+      $stmt->bindValue(":userId", $userId);
+      $stmt->execute();
+      
+      if ($stmt->rowCount() > 0) {
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+      } else {
+        return [];
+      }
     }
   }

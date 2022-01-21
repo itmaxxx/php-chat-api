@@ -3,15 +3,18 @@
   @include_once __DIR__ . "/../utils/httpException.php";
   @include_once __DIR__ . "/../utils/jsonResponse.php";
   @include_once __DIR__ . "/users.service.php";
+  @include_once __DIR__ . "../chats/chats.service.php";
   @include_once __DIR__ . "/../locale/en/messages.php";
   
   class UsersController
   {
     private $usersService;
+    private $chatsService;
     
     function __construct($conn)
     {
       $this->usersService = new UsersService($conn);
+      $this->chatsService = new ChatsService($conn);
     }
     
     function getUsers()
@@ -72,6 +75,10 @@
     
     function getUserChats($req)
     {
-      var_dump($req["user"]);
+      $chats = $this->chatsService->getUserChats($req["user"]["id"]);
+      
+      $response = ["chats" => $chats];
+      
+      jsonResponse($response);
     }
   }
