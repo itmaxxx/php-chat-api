@@ -5,11 +5,13 @@
 
     "user_not_found" => "User not found",
     "chat_not_found" => "Chat not found",
+    "participant_not_found" => "Participant not found",
 
     "user_created" => "User created",
     "chat_created" => "Chat created",
     
     "chat_deleted" => "Chat deleted",
+    "participant_deleted" => "Participant deleted",
 
     "failed_to_create_user" => "Failed to create user",
     "failed_to_create_chat" => "Failed to create chat",

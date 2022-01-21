@@ -79,7 +79,7 @@
       assertStrict($json->data->error, $messages["chat_not_found"]);
     });
     
-    it("should return chat not found", function () {
+    it("should return chat not found for random chat id", function () {
       global $testsConfig, $MaxDmitriev, $messages;
       
       $jwt = signJwtForUser($MaxDmitriev);
@@ -137,7 +137,7 @@
       assertStrict($json->data->error, $messages["not_enough_permission"]);
     });
   
-    it("should return chat not found error", function () {
+    it("should return chat not found error for random chat id", function () {
       global $testsConfig, $messages, $MaxDmitriev;
     
       $jwt = signJwtForUser($MaxDmitriev);
@@ -147,6 +147,56 @@
     
       assertStrict($response['info']['http_code'], 404);
       assertStrict($json->data->error, $messages["chat_not_found"]);
+    });
+  });
+  
+  describe("[DELETE] /api/chats/:chatId/users/:userId", function () {
+    it("should delete chat participant by chat admin", function () {
+      global $testsConfig, $messages, $MaxDmitriev, $MaxAndIlyaChat, $IlyaMehof;
+      
+      $jwt = signJwtForUser($MaxDmitriev);
+      
+      $response = request("DELETE", $testsConfig["host"] . "/api/chats/" . $MaxAndIlyaChat["id"] . "/users/" . $IlyaMehof["id"], ["headers" => ["Authorization: Bearer $jwt"]]);
+      $json = json_decode($response['data']);
+      
+      assertStrict($response['info']['http_code'], 200);
+      assertStrict($json->data->message, $messages["participant_deleted"]);
+    });
+    
+    it("should return not enough permission when trying to delete chat by a member", function () {
+      global $testsConfig, $messages, $MatveyGorelik, $GymPartyPublicChat, $IlyaMehof;
+      
+      $jwt = signJwtForUser($MatveyGorelik);
+      
+      $response = request("DELETE", $testsConfig["host"] . "/api/chats/" . $GymPartyPublicChat["id"] . "/users/" . $IlyaMehof["id"], ["headers" => ["Authorization: Bearer $jwt"]]);
+      $json = json_decode($response['data']);
+      
+      assertStrict($response['info']['http_code'], 403);
+      assertStrict($json->data->error, $messages["not_enough_permission"]);
+    });
+    
+    it("should return chat not found error for random chat id", function () {
+      global $testsConfig, $messages, $MaxDmitriev;
+      
+      $jwt = signJwtForUser($MaxDmitriev);
+      
+      $response = request("DELETE", $testsConfig["host"] . "/api/chats/random_chat_id/users/" . $MaxDmitriev["id"], ["headers" => ["Authorization: Bearer $jwt"]]);
+      $json = json_decode($response['data']);
+      
+      assertStrict($response['info']['http_code'], 404);
+      assertStrict($json->data->error, $messages["chat_not_found"]);
+    });
+  
+    it("should return participant not found error for random user id", function () {
+      global $testsConfig, $messages, $GymPartyPublicChat, $MaxDmitriev;
+    
+      $jwt = signJwtForUser($MaxDmitriev);
+    
+      $response = request("DELETE", $testsConfig["host"] . "/api/chats/" . $GymPartyPublicChat["id"] . "/users/random_id", ["headers" => ["Authorization: Bearer $jwt"]]);
+      $json = json_decode($response['data']);
+    
+      assertStrict($response['info']['http_code'], 404);
+      assertStrict($json->data->error, $messages["participant_not_found"]);
     });
   });
   
