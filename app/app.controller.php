@@ -101,9 +101,9 @@
         case 'POST':
           $reqBody = $this->_req->parseBody();
           
-          if ($this->req['resource'] === '/api/users')
+          if ($this->req['resource'] === '/api/chats')
           {
-            $this->usersController->createUser($reqBody["data"]);
+            $this->chatsController->createChat($reqBody["data"]);
             return;
           }
           if ($this->req['resource'] === '/api/auth/sign-up')

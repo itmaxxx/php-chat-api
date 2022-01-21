@@ -100,11 +100,11 @@
       
       $body = [
         "name" => "My private chat",
-        "isPrivate" => true,
-        "inviteLink" => "random_invite_link"
+        "isPrivate" => true
       ];
       
       $response = request("POST", $testsConfig["host"] . "/api/chats", ["json" => $body, "headers" => ["Authorization: Bearer $jwt"]]);
+      var_dump($response);
       $json = json_decode($response['data']);
       $createdChat = $json->data->chat;
       

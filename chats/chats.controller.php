@@ -52,18 +52,25 @@
     function createChat($chatDto)
     {
       global $messages;
-
-      $result = $this->chatsService->createChat($chatDto);
-
-      if (!$result) {
+      
+      try {
+        $chat = $chatDto;
+  
+        $chat["id"] = '4';
+        $chat["inviteLink"] = 'random_link';
+        
+        $this->chatsService->createChat($chat["id"], $chatDto["name"], $chatDto["isPrivate"], $chat["inviteLink"]);
+        
+        $response = [
+          "message" => $messages["chat_created"],
+          "chat" => $chat
+        ];
+  
+        jsonResponse($response)['end']();
+      }
+      catch (PDOException $ex)
+      {
         httpException($messages["failed_to_create_chat"])['end']();
       }
-
-      $response = [
-        "message" => $messages["chat_created"],
-        "chat" => $result
-      ];
-      
-      jsonResponse($response)['end']();
     }
   }
