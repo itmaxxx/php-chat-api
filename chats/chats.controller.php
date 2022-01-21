@@ -4,6 +4,7 @@
   @include_once __DIR__ . "/../utils/jsonResponse.php";
   @include_once __DIR__ . "/chats.service.php";
   @include_once __DIR__ . "/../locale/en/messages.php";
+  @include_once __DIR__ . "/../utils/randomId.php";
   
   class ChatsController
   {
@@ -14,23 +15,12 @@
       $this->chatsService = new ChatsService($conn);
     }
     
-    function getChats()
-    {
-      $chats = $this->chatsService->getChats();
-      
-      $response = [
-        "chats" => $chats
-      ];
-      
-      jsonResponse($response)['end']();
-    }
-    
     function getChatById($req)
     {
       global $messages;
       
       # Parse chat id from url
-      $chatId = intval(substr($req['resource'], strlen('/api/chats/')));
+      $chatId = substr($req['resource'], strlen('/api/chats/'));
 
       $chat = $this->chatsService->findById($chatId);
 
@@ -56,8 +46,8 @@
       try {
         $chat = $chatDto;
   
-        $chat["id"] = '4';
-        $chat["inviteLink"] = 'random_link';
+        $chat["id"] = randomId();
+        $chat["inviteLink"] = randomId();
         
         $this->chatsService->createChat($chat["id"], $chatDto["name"], $chatDto["isPrivate"], $chat["inviteLink"]);
         
@@ -66,7 +56,7 @@
           "chat" => $chat
         ];
   
-        jsonResponse($response)['end']();
+        jsonResponse($response, 201)['end']();
       }
       catch (PDOException $ex)
       {

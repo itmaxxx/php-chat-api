@@ -33,7 +33,7 @@
       global $messages;
       
       # Parse user id from url
-      $userId = intval(substr($req['resource'], strlen('/api/users/')));
+      $userId = substr($req['resource'], strlen('/api/users/'));
       
       $user = $this->usersService->getUserById($userId);
       
@@ -43,24 +43,6 @@
       
       $response = [
         "user" => $this->usersService->createUserRO($user)
-      ];
-      
-      jsonResponse($response)['end']();
-    }
-    
-    function createUser($userDto)
-    {
-      global $messages;
-
-      $result = $this->usersService->createUser($userDto);
-      
-      if (!$result) {
-        httpException($messages["failed_to_create_user"])['end']();
-      }
-      
-      $response = [
-        "message" => $messages["user_created"],
-        "user" => $result
       ];
       
       jsonResponse($response)['end']();

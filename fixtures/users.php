@@ -3,19 +3,19 @@
   $plainPassword = "qwerty";
   
   $MaxDmitriev = [
-    "id" => 1,
+    "id" => "user000000000001",
     "username" => "dmitriev",
     "password" => $plainPassword
   ];
   
   $IlyaMehof = [
-    "id" => 2,
+    "id" => "user000000000002",
     "username" => "mehoff",
     "password" => $plainPassword
   ];
   
   $MatveyGorelik = [
-    "id" => 3,
+    "id" => "user000000000003",
     "username" => "offiza",
     "password" => $plainPassword
   ];

@@ -63,7 +63,7 @@
         # Create Users table
         $users = <<<SQL
         CREATE TABLE IF NOT EXISTS Users (
-          id BIGINT PRIMARY KEY,
+          id VARCHAR(16) PRIMARY KEY,
           username VARCHAR(20) UNIQUE NOT NULL,
           fullname VARCHAR(30) NULL,
           password VARCHAR(30) NOT NULL,
@@ -72,17 +72,17 @@
         );
 
         CREATE TABLE IF NOT EXISTS Chats (
-          id BIGINT PRIMARY KEY,
+          id VARCHAR(16) PRIMARY KEY,
           image VARCHAR(128) NULL,
           name VARCHAR(30) NOT NULL,
           isPrivate BOOLEAN NOT NULL DEFAULT TRUE,
           isDeleted BOOLEAN DEFAULT FALSE,
-          inviteLink VARCHAR(30) NOT NULL
+          inviteLink VARCHAR(16) NOT NULL
         );
 
         CREATE TABLE IF NOT EXISTS ChatParticipants (
-          chatId BIGINT NOT NULL,
-          userId BIGINT NOT NULL,
+          chatId VARCHAR(16) NOT NULL,
+          userId VARCHAR(16) NOT NULL,
           permission TINYINT NOT NULL DEFAULT 0,
           FOREIGN KEY (chatId) REFERENCES Chats (id),
           FOREIGN KEY (userId) REFERENCES Users (id)

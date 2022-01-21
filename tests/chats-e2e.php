@@ -22,7 +22,7 @@
       $chatData = $json->data->chat;
       
       assertStrict($response['info']['http_code'], 200);
-      assertStrict(intval($chatData->id), $MaxAndIlyaChat['id']);
+      assertStrict($chatData->id, $MaxAndIlyaChat['id']);
       assertStrict($chatData->name, $MaxAndIlyaChat['name']);
       assertStrict(isset($chatData->isPrivate), false);
       assertStrict(isset($chatData->inviteLink), false);
@@ -51,7 +51,7 @@
       $chatData = $json->data->chat;
     
       assertStrict($response['info']['http_code'], 200);
-      assertStrict(intval($chatData->id), $GymPartyPublicChat['id']);
+      assertStrict($chatData->id, $GymPartyPublicChat['id']);
       assertStrict($chatData->name, $GymPartyPublicChat['name']);
       assertStrict(isset($chatData->isPrivate), false);
       assertStrict(isset($chatData->inviteLink), false);
@@ -104,12 +104,11 @@
       ];
       
       $response = request("POST", $testsConfig["host"] . "/api/chats", ["json" => $body, "headers" => ["Authorization: Bearer $jwt"]]);
-      var_dump($response);
       $json = json_decode($response['data']);
       $createdChat = $json->data->chat;
       
       assertStrict($response['info']['http_code'], 201);
-      assertStrict($createdChat["name"], $body["name"]);
+      assertStrict($createdChat->name, $body["name"]);
     });
   });
   
