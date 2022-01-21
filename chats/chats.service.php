@@ -58,6 +58,21 @@
       return $stmt->rowCount() > 0;
     }
   
+    function getChatParticipantByUserId($userId, $chatId)
+    {
+      $sql = "SELECT * FROM ChatParticipants WHERE userId=:userId AND chatId=:chatId";
+      $stmt = $this->conn->prepare($sql);
+      $stmt->bindValue(":userId", $userId);
+      $stmt->bindValue(":chatId", $chatId);
+      $stmt->execute();
+  
+      if ($stmt->rowCount() > 0) {
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+      } else {
+        return null;
+      }
+    }
+  
     function createChatRO($chat)
     {
       $chatRO = $chat;
