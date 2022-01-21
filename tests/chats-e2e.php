@@ -1,4 +1,4 @@
-<h1>Users e2e</h1>
+<h1>Chats e2e</h1>
 <pre>
 <?php
   
@@ -197,6 +197,88 @@
     
       assertStrict($response['info']['http_code'], 404);
       assertStrict($json->data->error, $messages["participant_not_found"]);
+    });
+  });
+  
+  describe("[GET] /api/chats/:chatId/users", function () {
+    it("should get private chat participants by chat id for chat participant", function () {
+      global $testsConfig, $MaxDmitriev, $MaxAndIlyaChat;
+      
+      $jwt = signJwtForUser($MaxDmitriev);
+      
+      $response = request("GET", $testsConfig["host"] . "/api/chats/" . $MaxAndIlyaChat["id"] . "/users", ["headers" => ["Authorization: Bearer $jwt"]]);
+      
+      $json = json_decode($response['data']);
+      $chatData = $json->data->chat;
+      
+      assertStrict($response['info']['http_code'], 200);
+      assertStrict($chatData->id, $MaxAndIlyaChat['id']);
+      assertStrict($chatData->name, $MaxAndIlyaChat['name']);
+      assertStrict(isset($chatData->isPrivate), false);
+      assertStrict(isset($chatData->inviteLink), false);
+    });
+    
+    it("should return error when trying to get private chat by id for NOT a chat participant", function () {
+      global $testsConfig, $messages, $MatveyGorelik, $MaxAndIlyaChat;
+      
+      $jwt = signJwtForUser($MatveyGorelik);
+      
+      $response = request("GET", $testsConfig["host"] . "/api/chats/" . $MaxAndIlyaChat["id"] . "/users", ["headers" => ["Authorization: Bearer $jwt"]]);
+      $json = json_decode($response['data']);
+      
+      assertStrict($response['info']['http_code'], 401);
+      assertStrict($json->data->error, $messages["no_access_to_the_chat"]);
+    });
+    
+    it("should get public chat participants by id", function () {
+      global $testsConfig, $MaxDmitriev, $GymPartyPublicChat;
+      
+      $jwt = signJwtForUser($MaxDmitriev);
+      
+      $response = request("GET", $testsConfig["host"] . "/api/chats/" . $GymPartyPublicChat["id"] . "/users", ["headers" => ["Authorization: Bearer $jwt"]]);
+      
+      $json = json_decode($response['data']);
+      $chatData = $json->data->chat;
+      
+      assertStrict($response['info']['http_code'], 200);
+      assertStrict($chatData->id, $GymPartyPublicChat['id']);
+      assertStrict($chatData->name, $GymPartyPublicChat['name']);
+      assertStrict(isset($chatData->isPrivate), false);
+      assertStrict(isset($chatData->inviteLink), false);
+    });
+    
+    it("should return not authorized when trying to get chat by id without authorization", function () {
+      global $testsConfig, $messages, $MaxAndIlyaChat;
+      
+      $response = request("GET", $testsConfig["host"] . "/api/chats/" . $MaxAndIlyaChat['id'] . "/users");
+      $json = json_decode($response['data']);
+      
+      assertStrict($response['info']['http_code'], 401);
+      assertStrict($json->data->error, $messages["not_authenticated"]);
+    });
+    
+    it("should return chat not found for deleted chat", function () {
+      global $testsConfig, $MaxDmitriev, $messages, $DeletedChatWithMaxAndMatvey;
+      
+      $jwt = signJwtForUser($MaxDmitriev);
+      
+      $response = request("GET", $testsConfig["host"] . "/api/chats/" . $DeletedChatWithMaxAndMatvey["id"] . "/users", ["headers" => ["Authorization: Bearer $jwt"]]);
+      $json = json_decode($response['data']);
+      
+      assertStrict($response['info']['http_code'], 404);
+      assertStrict($json->data->error, $messages["chat_not_found"]);
+    });
+    
+    it("should return chat not found for random chat id", function () {
+      global $testsConfig, $MaxDmitriev, $messages;
+      
+      $jwt = signJwtForUser($MaxDmitriev);
+      
+      $response = request("GET", $testsConfig["host"] . "/api/chats/random_id/users", ["headers" => ["Authorization: Bearer $jwt"]]);
+      $json = json_decode($response['data']);
+      
+      assertStrict($response['info']['http_code'], 404);
+      assertStrict($json->data->error, $messages["chat_not_found"]);
     });
   });
   
