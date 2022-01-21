@@ -134,7 +134,7 @@
       $json = json_decode($response['data']);
     
       assertStrict($response['info']['http_code'], 403);
-      assertStrict($json->data->message, $messages["not_enough_permission"]);
+      assertStrict($json->data->error, $messages["not_enough_permission"]);
     });
   
     it("should return chat not found error", function () {
@@ -146,7 +146,7 @@
       $json = json_decode($response['data']);
     
       assertStrict($response['info']['http_code'], 404);
-      assertStrict($json->data->message, $messages["chat_not_found"]);
+      assertStrict($json->data->error, $messages["chat_not_found"]);
     });
   });
   
