@@ -103,7 +103,8 @@
           
           if ($this->req['resource'] === '/api/chats')
           {
-            $this->chatsController->createChat($reqBody["data"]);
+            $this->_req->useGuard($this->jwtAuthGuard);
+            $this->chatsController->createChat($this->_req->getRequest(), $reqBody["data"]);
             return;
           }
           if ($this->req['resource'] === '/api/auth/sign-up')
