@@ -91,4 +91,12 @@
       $stmt->bindValue(":permission", $permission);
       $stmt->execute();
     }
+    
+    function deleteChatById($chatId)
+    {
+      $sql = "UPDATE Chats SET isDeleted=TRUE WHERE id=:chatId";
+      $stmt = $this->conn->prepare($sql);
+      $stmt->bindValue(":chatId", $chatId);
+      $stmt->execute();
+    }
   }

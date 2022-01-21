@@ -121,6 +121,18 @@
           httpException("Route not found", 404)['end']();
           
           break;
+          
+        case 'DELETE':
+          $reqBody = $this->_req->parseBody();
+  
+          if (strpos($this->req['resource'], '/api/chats/') === 0)
+          {
+            $this->_req->useGuard($this->jwtAuthGuard);
+            $this->chatsController->deleteChat($this->_req->getRequest(), $reqBody["data"]);
+            return;
+          }
+          
+          break;
         
         default:
           httpException("Method not supported", 404)['end']();

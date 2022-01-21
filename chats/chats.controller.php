@@ -65,4 +65,25 @@
         httpException($messages["failed_to_create_chat"])['end']();
       }
     }
+    
+    function deleteChat($req)
+    {
+      global $messages;
+      
+      try {
+        $chatId = substr($req['resource'], strlen('/api/chats/'));
+        
+        $this->chatsService->deleteChatById($chatId);
+  
+        $response = [
+          "message" => $messages["chat_deleted"]
+        ];
+        
+        jsonResponse($response)['end']();
+      }
+      catch (PDOException $ex)
+      {
+        httpException($messages["failed_to_delete_chat"])['end']();
+      }
+    }
   }
