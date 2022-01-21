@@ -81,4 +81,14 @@
         return [];
       }
     }
+    
+    function addParticipantToChat($userId, $chatId, $permission = 0)
+    {
+      $sql = "INSERT INTO ChatParticipants (userId, chatId, permission) VALUES (:userId, :chatId, :permission)";
+      $stmt = $this->conn->prepare($sql);
+      $stmt->bindValue(":userId", $userId);
+      $stmt->bindValue(":chatId", $chatId);
+      $stmt->bindValue(":permission", $permission);
+      $stmt->execute();
+    }
   }

@@ -93,7 +93,7 @@
   });
   
   describe("[POST] /api/chats", function () {
-    it("should create new chat", function () {
+    it("should be able to create new chat", function () {
       global $testsConfig, $MaxDmitriev;
   
       $jwt = signJwtForUser($MaxDmitriev);

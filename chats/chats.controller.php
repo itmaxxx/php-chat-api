@@ -39,7 +39,7 @@
       jsonResponse($response)['end']();
     }
     
-    function createChat($chatDto)
+    function createChat($req, $chatDto)
     {
       global $messages;
       
@@ -50,6 +50,8 @@
         $chat["inviteLink"] = randomId();
         
         $this->chatsService->createChat($chat["id"], $chatDto["name"], $chatDto["isPrivate"], $chat["inviteLink"]);
+        
+        $this->chatsService->addParticipantToChat($req["user"]["id"], $chat["id"], 2);
         
         $response = [
           "message" => $messages["chat_created"],
