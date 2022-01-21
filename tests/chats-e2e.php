@@ -93,6 +93,21 @@
   });
   
   describe("[POST] /api/chats", function () {
+    it("should return not authorized error when trying to create chat without authorization", function () {
+      global $testsConfig, $messages;
+    
+      $body = [
+        "name" => "My private chat",
+        "isPrivate" => true
+      ];
+    
+      $response = request("POST", $testsConfig["host"] . "/api/chats", ["json" => $body]);
+      $json = json_decode($response['data']);
+    
+      assertStrict($response['info']['http_code'], 401);
+      assertStrict($json->data->error, $messages["not_authenticated"]);
+    });
+    
     it("should be able to create new chat", function () {
       global $testsConfig, $MaxDmitriev;
   
