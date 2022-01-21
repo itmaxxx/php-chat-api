@@ -118,11 +118,11 @@
       
       $jwt = signJwtForUser($MaxDmitriev);
       
-      $response = request("DELETE", $testsConfig["host"] . "/api/chats" . $MaxAndIlyaChat["id"], ["headers" => ["Authorization: Bearer $jwt"]]);
+      $response = request("DELETE", $testsConfig["host"] . "/api/chats/" . $MaxAndIlyaChat["id"], ["headers" => ["Authorization: Bearer $jwt"]]);
       $json = json_decode($response['data']);
       
       assertStrict($response['info']['http_code'], 200);
-      assertStrict($json->message, $messages["chat_deleted"]);
+      assertStrict($json->data->message, $messages["chat_deleted"]);
     });
   
     it("should return not enough permission when trying to delete chat by a member", function () {
@@ -130,11 +130,11 @@
     
       $jwt = signJwtForUser($MatveyGorelik);
     
-      $response = request("DELETE", $testsConfig["host"] . "/api/chats" . $GymPartyPublicChat["id"], ["headers" => ["Authorization: Bearer $jwt"]]);
+      $response = request("DELETE", $testsConfig["host"] . "/api/chats/" . $GymPartyPublicChat["id"], ["headers" => ["Authorization: Bearer $jwt"]]);
       $json = json_decode($response['data']);
     
       assertStrict($response['info']['http_code'], 403);
-      assertStrict($json->message, $messages["not_enough_permission"]);
+      assertStrict($json->data->message, $messages["not_enough_permission"]);
     });
   
     it("should return chat not found error", function () {
@@ -146,7 +146,7 @@
       $json = json_decode($response['data']);
     
       assertStrict($response['info']['http_code'], 404);
-      assertStrict($json->message, $messages["chat_not_found"]);
+      assertStrict($json->data->message, $messages["chat_not_found"]);
     });
   });
   
