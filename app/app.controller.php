@@ -128,7 +128,7 @@
           if (strpos($this->req['resource'], '/api/chats/') === 0)
           {
             $this->_req->useGuard($this->jwtAuthGuard);
-            $this->chatsController->deleteChat($this->_req->getRequest(), $reqBody["data"]);
+            $this->chatsController->deleteChat($this->_req->getRequest());
             return;
           }
           

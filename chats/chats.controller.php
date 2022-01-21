@@ -72,6 +72,19 @@
       
       try {
         $chatId = substr($req['resource'], strlen('/api/chats/'));
+  
+        $chat = $this->chatsService->findById($chatId);
+  
+        if (is_null($chat)) {
+          httpException($messages["chat_not_found"], 404)['end']();
+        }
+        
+        $chatParticipant = $this->chatsService->getChatParticipantByUserId($req["user"]["id"], $chatId);
+        
+        if (is_null($chatParticipant) || intval($chatParticipant["permission"]) !== 2)
+        {
+          httpException($messages["not_enough_permission"], 403)['end']();
+        }
         
         $this->chatsService->deleteChatById($chatId);
   
