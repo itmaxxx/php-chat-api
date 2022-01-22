@@ -63,7 +63,9 @@
         case 'GET':
           if ($this->req['resource'] === '/api/users/me')
           {
+            // When we require authorization and want to get user in controller
             $this->_req->useGuard($this->jwtAuthGuard);
+            // We need to call getRequest() method in original request method
             $this->usersController->getMe($this->_req->getRequest());
             return;
           }
@@ -125,6 +127,12 @@
         case 'DELETE':
           $reqBody = $this->_req->parseBody();
   
+          if (preg_match("/\/api\/chats\/(?'chatId'[a-z0-9]+)\/users\/(?'userId'[a-z0-9]+)/", $this->req['resource']))
+          {
+            $this->_req->useGuard($this->jwtAuthGuard);
+            $this->chatsController->deleteChatParticipant($this->_req->getRequest());
+            return;
+          }
           if (strpos($this->req['resource'], '/api/chats/') === 0)
           {
             $this->_req->useGuard($this->jwtAuthGuard);
