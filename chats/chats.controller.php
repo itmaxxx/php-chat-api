@@ -3,16 +3,18 @@
   @include_once __DIR__ . "/../utils/httpException.php";
   @include_once __DIR__ . "/../utils/jsonResponse.php";
   @include_once __DIR__ . "/chats.service.php";
+  @include_once __DIR__ . "/../users/users.service.php";
   @include_once __DIR__ . "/../locale/en/messages.php";
   @include_once __DIR__ . "/../utils/randomId.php";
   
   class ChatsController
   {
-    private $chatsService;
+    private $chatsService, $usersService;
     
     function __construct($conn)
     {
       $this->chatsService = new ChatsService($conn);
+      $this->usersService = new UsersService($conn);
     }
     
     function getChatById($req)
@@ -136,8 +138,54 @@
       }
       catch (PDOException $ex)
       {
-        var_dump($ex);
         httpException($messages["failed_to_delete_chat_participant"])['end']();
+      }
+    }
+    
+    function addUserToChat($req, $addUserToChatDto)
+    {
+      global $messages;
+  
+      try {
+        preg_match("/\/api\/chats\/(?'chatId'[a-z0-9]+)\/users/", $req['resource'], $parsedUrl);
+  
+        $chat = $this->chatsService->findById($parsedUrl["chatId"]);
+
+        if (is_null($chat)) {
+          httpException($messages["chat_not_found"], 404)['end']();
+        }
+
+        $initiatorParticipant = $this->chatsService->getChatParticipantByUserId($req["user"]["id"], $chat["id"]);
+
+        if (is_null($addUserToChatDto["permission"]))
+        {
+          $addUserToChatDto["permission"] = 0;
+        }
+
+        if (is_null($initiatorParticipant) || (intval($initiatorParticipant["permission"]) !== 2 && $addUserToChatDto["permission"] >= 1))
+        {
+          httpException($messages["not_enough_permission"], 403)['end']();
+        }
+
+        $userToAdd = $this->usersService->getUserById($addUserToChatDto["userId"]);
+
+        if (is_null($userToAdd))
+        {
+          httpException($messages["user_not_found"], 404)['end']();
+        }
+
+        $this->chatsService->addParticipantToChat($addUserToChatDto["userId"], $chat["id"], $addUserToChatDto["permission"]);
+    
+        $response = [
+          "message" => $messages["participant_added"]
+        ];
+    
+        jsonResponse($response, 201)['end']();
+      }
+      catch (PDOException $ex)
+      {
+        var_dump($ex);
+        httpException($messages["failed_to_add_chat_participant"])['end']();
       }
     }
   }

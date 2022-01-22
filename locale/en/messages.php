@@ -18,6 +18,7 @@
     "failed_to_create_chat" => "Failed to create chat",
     "failed_to_delete_chat" => "Failed to delete chat",
     "failed_to_delete_chat_participant" => "Failed to delete chat participant",
+    "failed_to_add_chat_participant" => "Failed to add chat participant",
     "failed_to_sign_in" => "Failed to sign in",
     "failed_to_sign_up" => "Failed to sign up",
 
