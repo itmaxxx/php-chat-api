@@ -31,7 +31,7 @@
       }
       
       if ($chat["isPrivate"] && !$this->chatsService->isUserChatParticipant($req["user"]["id"], $chatId)) {
-        httpException($messages["no_access_to_the_chat"], 401)['end']();
+        httpException($messages["not_enough_permission"], 403)['end']();
       }
 
       $response = [
@@ -184,8 +184,40 @@
       }
       catch (PDOException $ex)
       {
-        var_dump($ex);
         httpException($messages["failed_to_add_chat_participant"])['end']();
+      }
+    }
+    
+    function getChatParticipants($req)
+    {
+      global $messages;
+  
+      try {
+        preg_match("/\/api\/chats\/(?'chatId'[a-z0-9]+)\/users/", $req['resource'], $parsedUrl);
+  
+        $chat = $this->chatsService->findById($parsedUrl["chatId"]);
+  
+        if (is_null($chat)) {
+          httpException($messages["chat_not_found"], 404)['end']();
+        }
+  
+        $initiatorParticipant = $this->chatsService->getChatParticipantByUserId($req["user"]["id"], $chat["id"]);
+  
+        if (is_null($initiatorParticipant) && $chat["isPrivate"])
+        {
+          httpException($messages["not_enough_permission"], 403)['end']();
+        }
+        
+        $chatParticipants = $this->chatsService->getChatParticipants($chat["id"]);
+  
+        $response = [
+          "participants" => $chatParticipants
+        ];
+  
+        jsonResponse($response)['end']();
+      }
+      catch (PDOException $ex) {
+        httpException($messages["failed_to_get_chat_participants"])['end']();
       }
     }
   }
