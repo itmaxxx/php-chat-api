@@ -195,7 +195,7 @@
       
       $jwt = signJwtForUser($MaxDmitriev);
       
-      $response = request("DELETE", $testsConfig["host"] . "/api/chats/random_chat_id/users/" . $MaxDmitriev["id"], ["headers" => ["Authorization: Bearer $jwt"]]);
+      $response = request("DELETE", $testsConfig["host"] . "/api/chats/randomchatid/users/" . $MaxDmitriev["id"], ["headers" => ["Authorization: Bearer $jwt"]]);
       $json = json_decode($response['data']);
       
       assertStrict($response['info']['http_code'], 404);
@@ -203,11 +203,11 @@
     });
   
     it("should return participant not found error for random user id", function () {
-      global $testsConfig, $messages, $GymPartyPublicChat, $MaxDmitriev;
+      global $testsConfig, $messages, $MaxAndIlyaChat, $MaxDmitriev;
     
       $jwt = signJwtForUser($MaxDmitriev);
     
-      $response = request("DELETE", $testsConfig["host"] . "/api/chats/" . $GymPartyPublicChat["id"] . "/users/random_id", ["headers" => ["Authorization: Bearer $jwt"]]);
+      $response = request("DELETE", $testsConfig["host"] . "/api/chats/" . $MaxAndIlyaChat["id"] . "/users/randomid", ["headers" => ["Authorization: Bearer $jwt"]]);
       $json = json_decode($response['data']);
     
       assertStrict($response['info']['http_code'], 404);
