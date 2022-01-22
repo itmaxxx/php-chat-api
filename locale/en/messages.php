@@ -9,6 +9,7 @@
 
     "user_created" => "User created",
     "chat_created" => "Chat created",
+    "participant_added" => "Participant added",
     
     "chat_deleted" => "Chat deleted",
     "participant_deleted" => "Participant deleted",
