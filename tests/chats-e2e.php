@@ -302,7 +302,7 @@
       global $testsConfig, $messages, $MaxDmitriev, $GymPartyPublicChat;
       
       $body = [
-        "userId" => $MaxDmitriev
+        "userId" => $MaxDmitriev["id"]
       ];
       
       $response = request("POST", $testsConfig["host"] . "/api/chats/" . $GymPartyPublicChat["id"] . "/users", ["json" => $body]);
@@ -318,7 +318,7 @@
       $jwt = signJwtForUser($MaxDmitriev);
       
       $body = [
-        "userId" => $MatveyGorelik
+        "userId" => $MatveyGorelik["id"]
       ];
       
       $response = request("POST", $testsConfig["host"] . "/api/chats/" . $GymPartyPublicChat["id"] . "/users", ["json" => $body, "headers" => ["Authorization: Bearer $jwt"]]);
@@ -328,13 +328,13 @@
       assertStrict($json->data->message, $messages["participant_added"]);
     });
   
-    it("chat member should not be able to add chat participant", function () {
-      global $testsConfig, $messages, $MaxDmitriev, $MatveyGorelik, $GymPartyPublicChat;
+    it("chat member should be able to add chat participant", function () {
+      global $testsConfig, $messages, $IlyaMehof, $MatveyGorelik, $GymPartyPublicChat;
     
-      $jwt = signJwtForUser($MaxDmitriev);
+      $jwt = signJwtForUser($IlyaMehof);
     
       $body = [
-        "userId" => $MatveyGorelik
+        "userId" => $MatveyGorelik["id"]
       ];
     
       $response = request("POST", $testsConfig["host"] . "/api/chats/" . $GymPartyPublicChat["id"] . "/users", ["json" => $body, "headers" => ["Authorization: Bearer $jwt"]]);
@@ -342,6 +342,23 @@
     
       assertStrict($response['info']['http_code'], 201);
       assertStrict($json->data->message, $messages["participant_added"]);
+    });
+  
+    it("chat member should not be able to add chat participant with higher privilege", function () {
+      global $testsConfig, $messages, $IlyaMehof, $MatveyGorelik, $GymPartyPublicChat;
+    
+      $jwt = signJwtForUser($IlyaMehof);
+    
+      $body = [
+        "userId" => $MatveyGorelik["id"],
+        "permission" => 2
+      ];
+    
+      $response = request("POST", $testsConfig["host"] . "/api/chats/" . $GymPartyPublicChat["id"] . "/users", ["json" => $body, "headers" => ["Authorization: Bearer $jwt"]]);
+      $json = json_decode($response['data']);
+    
+      assertStrict($response['info']['http_code'], 403);
+      assertStrict($json->data->error, $messages["not_enough_permission"]);
     });
   
     it("should return error when not chat participant trying to add user to chat", function () {
@@ -350,14 +367,30 @@
       $jwt = signJwtForUser($MatveyGorelik);
     
       $body = [
-        "userId" => $MaxDmitriev
+        "userId" => $MaxDmitriev["id"]
       ];
     
       $response = request("POST", $testsConfig["host"] . "/api/chats/" . $GymPartyPublicChat["id"] . "/users", ["json" => $body, "headers" => ["Authorization: Bearer $jwt"]]);
       $json = json_decode($response['data']);
     
-      assertStrict($response['info']['http_code'], 401);
-      assertStrict($json->data->message, $messages["not_enough_permission"]);
+      assertStrict($response['info']['http_code'], 403);
+      assertStrict($json->data->error, $messages["not_enough_permission"]);
+    });
+  
+    it("should return error when trying to add not existing user", function () {
+      global $testsConfig, $messages, $MaxDmitriev, $GymPartyPublicChat;
+    
+      $jwt = signJwtForUser($MaxDmitriev);
+    
+      $body = [
+        "userId" => "randomid"
+      ];
+    
+      $response = request("POST", $testsConfig["host"] . "/api/chats/" . $GymPartyPublicChat["id"] . "/users", ["json" => $body, "headers" => ["Authorization: Bearer $jwt"]]);
+      $json = json_decode($response['data']);
+    
+      assertStrict($response['info']['http_code'], 404);
+      assertStrict($json->data->error, $messages["user_not_found"]);
     });
   });
   
