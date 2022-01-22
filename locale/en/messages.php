@@ -19,10 +19,10 @@
     "failed_to_delete_chat" => "Failed to delete chat",
     "failed_to_delete_chat_participant" => "Failed to delete chat participant",
     "failed_to_add_chat_participant" => "Failed to add chat participant",
+    "failed_to_get_chat_participants" => "Failed to get chat participants",
     "failed_to_sign_in" => "Failed to sign in",
     "failed_to_sign_up" => "Failed to sign up",
 
     "not_authenticated" => "Not authenticated",
-    "no_access_to_the_chat" => "You do not have access to the chat",
     "not_enough_permission" => "You do not have enough permission to do this"
   ];
