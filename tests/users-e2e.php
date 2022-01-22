@@ -83,7 +83,7 @@
       $chats = $json->data->chats;
       
       assertStrict($response['info']['http_code'], 200);
-      assertStrict(count($chats), 1);
+      assertStrict(count($chats), 2);
     });
   });
 

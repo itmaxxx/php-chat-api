@@ -3,7 +3,7 @@
   @include_once __DIR__ . "/chats.php";
   @include_once  __DIR__ . "/users.php";
   
-  global $MaxAndIlyaChat, $MaxDmitriev, $IlyaMehof, $DeletedChatWithMaxAndMatvey, $MatveyGorelik;
+  global $MaxAndIlyaChat, $MaxDmitriev, $IlyaMehof, $DeletedChatWithMaxAndMatvey, $MatveyGorelik, $GymPartyPublicChat;
   
   $MaxInChatWithIlya = [
     "chatId" => $MaxAndIlyaChat["id"],
@@ -29,4 +29,16 @@
     "permission" => 2
   ];
   
-  $chatParticipantsFixtures = [$MaxInChatWithIlya, $IlyaInChatWithMax, $MaxInDeletedChatWithMatvey, $MatveyInDeletedChatWithMax];
+  $MaxInGymChat = [
+    "chatId" => $GymPartyPublicChat["id"],
+    "userId" => $MaxDmitriev["id"],
+    "permission" => 2
+  ];
+  
+  $IlyaInGymChat = [
+    "chatId" => $GymPartyPublicChat["id"],
+    "userId" => $IlyaMehof["id"],
+    "permission" => 0
+  ];
+  
+  $chatParticipantsFixtures = [$MaxInChatWithIlya, $IlyaInChatWithMax, $MaxInDeletedChatWithMatvey, $MatveyInDeletedChatWithMax, $IlyaInGymChat, $MaxInGymChat];
