@@ -123,4 +123,18 @@
       $stmt->bindValue(":chatId", $chatId);
       $stmt->execute();
     }
+  
+    function getChatParticipants($chatId)
+    {
+      $sql = "SELECT U.id AS id, U.username AS username, U.fullname AS fullname, U.profileImage as profileImage, U.description as description FROM Users AS U, ChatParticipants AS CP WHERE CP.chatId=:chatId AND U.id=CP.userId";
+      $stmt = $this->conn->prepare($sql);
+      $stmt->bindValue(":chatId", $chatId);
+      $stmt->execute();
+    
+      if ($stmt->rowCount() > 0) {
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+      } else {
+        return [];
+      }
+    }
   }
