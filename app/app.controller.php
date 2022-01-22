@@ -87,6 +87,13 @@
             $this->usersController->getUsers();
             return;
           }
+          # /chats/:chatId/users
+          if (preg_match("/\/api\/chats\/(?'chatId'[a-z0-9]+)\/users/", $this->req['resource']))
+          {
+            $this->_req->useGuard($this->jwtAuthGuard);
+            $this->chatsController->getChatParticipants($this->_req->getRequest());
+            return;
+          }
           # /chats/:chatId
           if (strpos($this->req['resource'], '/api/chats/') === 0)
           {
