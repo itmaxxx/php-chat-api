@@ -99,4 +99,45 @@
         httpException($messages["failed_to_delete_chat"])['end']();
       }
     }
+    
+    function deleteChatParticipant($req) {
+      global $messages;
+  
+      try {
+        preg_match("/\/api\/chats\/(?'chatId'[a-z0-9]+)\/users\/(?'userId'[a-z0-9]+)/", $req['resource'], $parsedUrl);
+    
+        $chat = $this->chatsService->findById($parsedUrl["chatId"]);
+    
+        if (is_null($chat)) {
+          httpException($messages["chat_not_found"], 404)['end']();
+        }
+        
+        $initiatorParticipant = $this->chatsService->getChatParticipantByUserId($req["user"]["id"], $chat["id"]);
+        
+        if (is_null($initiatorParticipant) || intval($initiatorParticipant["permission"]) !== 2)
+        {
+          httpException($messages["not_enough_permission"], 403)['end']();
+        }
+    
+        $chatParticipantToDelete = $this->chatsService->getChatParticipantByUserId($parsedUrl["userId"], $chat["id"]);
+    
+        if (is_null($chatParticipantToDelete))
+        {
+          httpException($messages["participant_not_found"], 404)['end']();
+        }
+    
+        $this->chatsService->deleteChatParticipant($parsedUrl["userId"], $chat["id"]);
+    
+        $response = [
+          "message" => $messages["participant_deleted"]
+        ];
+    
+        jsonResponse($response)['end']();
+      }
+      catch (PDOException $ex)
+      {
+        var_dump($ex);
+        httpException($messages["failed_to_delete_chat_participant"])['end']();
+      }
+    }
   }

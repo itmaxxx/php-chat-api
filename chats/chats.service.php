@@ -106,6 +106,15 @@
       $stmt->bindValue(":permission", $permission);
       $stmt->execute();
     }
+  
+    function deleteChatParticipant($userId, $chatId)
+    {
+      $sql = "DELETE FROM ChatParticipants WHERE userId=:userId AND chatId=:chatId";
+      $stmt = $this->conn->prepare($sql);
+      $stmt->bindValue(":userId", $userId);
+      $stmt->bindValue(":chatId", $chatId);
+      $stmt->execute();
+    }
     
     function deleteChatById($chatId)
     {
