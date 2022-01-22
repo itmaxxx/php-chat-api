@@ -102,7 +102,13 @@
         
         case 'POST':
           $reqBody = $this->_req->parseBody();
-          
+  
+          if (preg_match("/\/api\/chats\/(?'chatId'[a-z0-9]+)\/users/", $this->req['resource']))
+          {
+            $this->_req->useGuard($this->jwtAuthGuard);
+            $this->chatsController->addUserToChat($this->_req->getRequest(), $reqBody["data"]);
+            return;
+          }
           if ($this->req['resource'] === '/api/chats')
           {
             $this->_req->useGuard($this->jwtAuthGuard);
