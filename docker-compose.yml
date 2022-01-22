@@ -12,6 +12,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: web_chat
+    cap_add:
+      - SYS_NICE
 
   adminer:
     container_name: web_chat_adminer

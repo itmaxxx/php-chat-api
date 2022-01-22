@@ -3,15 +3,18 @@
   @include_once __DIR__ . "/../utils/httpException.php";
   @include_once __DIR__ . "/../utils/jsonResponse.php";
   @include_once __DIR__ . "/users.service.php";
+  @include_once __DIR__ . "../chats/chats.service.php";
   @include_once __DIR__ . "/../locale/en/messages.php";
   
   class UsersController
   {
     private $usersService;
+    private $chatsService;
     
     function __construct($conn)
     {
       $this->usersService = new UsersService($conn);
+      $this->chatsService = new ChatsService($conn);
     }
     
     function getUsers()
@@ -30,7 +33,7 @@
       global $messages;
       
       # Parse user id from url
-      $userId = intval(substr($req['resource'], strlen('/api/users/')));
+      $userId = substr($req['resource'], strlen('/api/users/'));
       
       $user = $this->usersService->getUserById($userId);
       
@@ -45,25 +48,18 @@
       jsonResponse($response)['end']();
     }
     
-    function createUser($userDto)
-    {
-      $result = $this->usersService->createUser($userDto);
-      
-      if (!$result) {
-        httpException("Failed to create user")['end']();
-      }
-      
-      $response = [
-        "message" => "User created",
-        "user" => $result
-      ];
-      
-      jsonResponse($response)['end']();
-    }
-    
     function getMe($req)
     {
       $response = ["user" => $this->usersService->createUserRO($req["user"])];
+      
+      jsonResponse($response);
+    }
+    
+    function getUserChats($req)
+    {
+      $chats = $this->chatsService->getUserChats($req["user"]["id"]);
+      
+      $response = ["chats" => $chats];
       
       jsonResponse($response);
     }

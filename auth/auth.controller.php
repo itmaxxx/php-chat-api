@@ -2,18 +2,16 @@
   
   @include_once __DIR__ . "/../utils/httpException.php";
   @include_once __DIR__ . "/../utils/jsonResponse.php";
-  @include_once __DIR__ . "/auth.service.php";
   @include_once __DIR__ . "/../utils/jwt.php";
   @include_once __DIR__ . "/../locale/en/messages.php";
+  @include_once __DIR__ . "/../utils/randomId.php";
   
   class AuthController
   {
-    private $authService;
     private $usersService;
     
     function __construct($conn)
     {
-      $this->authService = new AuthService($conn);
       $this->usersService = new UsersService($conn);
     }
     
@@ -30,7 +28,7 @@
         httpException($messages["username_taken"])['end']();
       }
       
-      $id = random_int(0, 9999999);
+      $id = randomId();
       
       try {
         $this->usersService->createUser($id, $registerUserDto["username"], $registerUserDto["password"]);

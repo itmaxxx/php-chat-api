@@ -80,21 +80,24 @@
     curl_setopt($req, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($req, CURLOPT_FRESH_CONNECT, true);
     
+    $headers = [];
+    
     if ($options["json"]) {
       $body = json_encode($options["json"], JSON_UNESCAPED_UNICODE);
       
       curl_setopt($req, CURLOPT_POSTFIELDS, $body);
-      curl_setopt($req, CURLOPT_HTTPHEADER, [
-          'Content-Type: application/json',
-          'Content-Length: ' . strlen($body)
-        ]
-      );
+      $headers[] = 'Content-Type: application/json';
+      $headers[] = 'Content-Length: ' . strlen($body);
     }
     
     if ($options["headers"]) {
-      curl_setopt($req, CURLOPT_HTTPHEADER, $options["headers"]);
+      foreach ($options["headers"] as $header) {
+        $headers[] = $header;
+      }
     }
-    
+  
+    curl_setopt($req, CURLOPT_HTTPHEADER, $headers);
+  
     $response = curl_exec($req);
     $responseInfo = curl_getinfo($req);
     

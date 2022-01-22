@@ -51,17 +51,19 @@
       # Parsed json from body
       $data = [];
       
-      if ($this->contentType == 'application/json') {
+      if ($this->contentType == 'application/json')
+      {
         $body = file_get_contents("php://input");
         $data = json_decode($body, true);
         
-        if (json_last_error() !== JSON_ERROR_NONE) {
+        if (json_last_error() !== JSON_ERROR_NONE)
+        {
           httpException("Error parsing json")['end']();
         }
-      } else if ($this->contentType == 'application/x-www-form-urlencoded') {
-        httpException("Form content type not supported yet")['end']();
-      } else {
-        httpException("Unsupported Content-Type $this->contentType")['end']();
+      }
+      else if ($this->contentType == 'application/x-www-form-urlencoded')
+      {
+        httpException("Form content type not supported")['end']();
       }
       
       return ["body" => $body, "data" => $data];
