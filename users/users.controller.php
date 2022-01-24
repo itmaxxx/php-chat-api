@@ -8,8 +8,8 @@
   
   class UsersController
   {
-    private $usersService;
-    private $chatsService;
+    private UsersService $usersService;
+    private ChatsService $chatsService;
     
     function __construct($conn)
     {

@@ -2,7 +2,7 @@
   
   class JwtAuthGuard
   {
-    private $usersService;
+    private UsersService $usersService;
     
     public function __construct($usersService)
     {

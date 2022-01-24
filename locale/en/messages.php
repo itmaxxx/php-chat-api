@@ -11,6 +11,8 @@
     "chat_created" => "Chat created",
     "participant_added" => "Participant added",
     
+    "message_sent" => "Message sent",
+    
     "chat_deleted" => "Chat deleted",
     "participant_deleted" => "Participant deleted",
 
@@ -20,6 +22,8 @@
     "failed_to_delete_chat_participant" => "Failed to delete chat participant",
     "failed_to_add_chat_participant" => "Failed to add chat participant",
     "failed_to_get_chat_participants" => "Failed to get chat participants",
+    "failed_to_get_chat_messages" => "Failed to get chat messages",
+    "failed_to_send_message_to_chat" => "Failed to send message to chat",
     "failed_to_sign_in" => "Failed to sign in",
     "failed_to_sign_up" => "Failed to sign up",
 

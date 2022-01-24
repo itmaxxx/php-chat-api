@@ -2,7 +2,7 @@
   
   class ChatsService
   {
-    private $conn;
+    private PDO $conn;
     
     function __construct($conn)
     {

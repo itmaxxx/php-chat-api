@@ -12,19 +12,19 @@
   class AppController
   {
     # Connection
-    private $conn;
+    private PDO $conn;
     # Request object
-    private $_req;
+    private Request $_req;
     # Request array returned by getRequest() method
     # Also, note that id doesn't contain user unless you update its value manually
-    private $req;
+    private array $req;
     # Controllers
-    private $dbController;
-    private $usersController;
-    private $chatsController;
-    private $authController;
+    private DbController $dbController;
+    private UsersController $usersController;
+    private ChatsController $chatsController;
+    private AuthController $authController;
     # Guards
-    private $jwtAuthGuard;
+    private JwtAuthGuard $jwtAuthGuard;
     
     function __construct($dbConfig)
     {
