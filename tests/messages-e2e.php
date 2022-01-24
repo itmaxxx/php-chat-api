@@ -10,7 +10,7 @@
   @include_once __DIR__ . "/../vendor/autoload.php";
   @include_once __DIR__ . "/../utils/jwt.php";
   
-  function getChatMessages($chatId, $user)
+  function getChatMessages($chatId, $user = null): array
   {
     global $testsConfig;
     
@@ -33,7 +33,7 @@
     ];
   }
   
-  function sendMessageToChat($chatId, $user)
+  function sendMessageToChat($chatId, $user = null): array
   {
     global $testsConfig;
     
