@@ -84,7 +84,7 @@
       
       $jwt = signJwtForUser($MaxDmitriev);
       
-      $response = request("GET", $testsConfig["host"] . "/api/chats/random_id", ["headers" => ["Authorization: Bearer $jwt"]]);
+      $response = request("GET", $testsConfig["host"] . "/api/chats/randomid", ["headers" => ["Authorization: Bearer $jwt"]]);
       $json = json_decode($response['data']);
       
       assertStrict($response['info']['http_code'], 404);
