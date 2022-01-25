@@ -3,6 +3,7 @@
   @include_once("./fixtures/users.php");
   @include_once("./fixtures/chats.php");
   @include_once("./fixtures/chatParticipants.php");
+  @include_once("./fixtures/messages.php");
   
   class DbController
   {
@@ -13,15 +14,17 @@
       $this->connectToDb($dbConfig);
       
       // TODO: Don't run this if we are in production mode
-      $this->dropTables(['ChatParticipants', 'Users', 'Chats']);
+      $this->dropTables(['ChatParticipants', 'Messages', 'Users', 'Chats']);
+      // $this->dropDB($dbConfig["name"]);
       
-      $this->initialize();
+      $this->initialize($dbConfig["name"]);
       
       # Include fixtures from global scope here
-      global $usersFixtures, $chatsFixtures, $chatParticipantsFixtures;
+      global $usersFixtures, $chatsFixtures, $chatParticipantsFixtures, $messagesFixtures;
       $this->seed('Users', $usersFixtures);
       $this->seed('Chats', $chatsFixtures);
       $this->seed('ChatParticipants', $chatParticipantsFixtures);
+      $this->seed('Messages', $messagesFixtures);
     }
     
     private function connectToDb(array $dbConfig)
@@ -46,22 +49,39 @@
     {
       try {
         foreach ($tables as $table) {
-          $sql = "DROP TABLE $table";
+          $sql = "DROP TABLE IF EXISTS $table";
           $this->conn->exec($sql);
         }
       } catch (Exception $ex) {
         httpException("Failed to drop db tables", 500);
       }
     }
+  
+    private function dropDB($dbName)
+    {
+      try {
+        $sql = "DROP DATABASE IF EXISTS $dbName";
+        $this->conn->exec($sql);
+      } catch (Exception $ex) {
+        httpException("Failed to drop db", 500);
+      }
+    }
     
     /**
      *  Create all tables with hardcoded sql script
      */
-    private function initialize()
+    private function initialize($dbName)
     {
       try {
         # Create Users table
         $users = <<<SQL
+        -- CREATE DATABASE IF NOT EXISTS $dbName;
+        -- CHARACTER SET utf8mb4;
+        -- COLLATE utf8mb4_unicode_ci;
+        -- SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
+        
+        -- USE $dbName;
+
         CREATE TABLE IF NOT EXISTS Users (
           id VARCHAR(16) PRIMARY KEY,
           username VARCHAR(20) UNIQUE NOT NULL,
@@ -84,6 +104,18 @@
           chatId VARCHAR(16) NOT NULL,
           userId VARCHAR(16) NOT NULL,
           permission TINYINT NOT NULL DEFAULT 0,
+          lastSeenMessageId VARCHAR(16) DEFAULT 0,
+          FOREIGN KEY (chatId) REFERENCES Chats (id),
+          FOREIGN KEY (userId) REFERENCES Users (id)
+        );
+
+        CREATE TABLE IF NOT EXISTS Messages (
+          id VARCHAR(16) PRIMARY KEY,
+          chatId VARCHAR(16) NOT NULL,
+          userId VARCHAR(16) NOT NULL,
+          content NVARCHAR(2048) NOT NULL,
+          contentType TINYINT NOT NULL DEFAULT 0,
+          createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
           FOREIGN KEY (chatId) REFERENCES Chats (id),
           FOREIGN KEY (userId) REFERENCES Users (id)
         );
@@ -116,6 +148,7 @@
           $this->conn->prepare($sql)->execute($fixture);
         }
       } catch (Exception $ex) {
+        var_dump($ex);
         httpException("Failed to seed db, table '$table'", 500)['end']();
       }
     }

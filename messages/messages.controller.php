@@ -34,18 +34,14 @@
           httpException($messages["chat_not_found"], 404)['end']();
         }
   
-        $initiatorParticipant = $this->chatsService->getChatParticipantByUserId($req["user"]["id"], $chat["id"]);
+        $initiatorParticipant = $this->chatsService->isUserChatParticipant($req["user"]["id"], $chat["id"]);
   
-        if (is_null($initiatorParticipant))
+        if (!$initiatorParticipant)
         {
           httpException($messages["not_enough_permission"], 403)['end']();
         }
         
-        $message = $messageDto;
-  
-        $message["id"] = randomId();
-  
-        $this->messagesService->createMessage($chat["id"], );
+        $this->messagesService->createMessage(randomId(), $chat["id"], $req["user"]["id"], $messageDto["content"], $messageDto["contentType"]);
         
         $response = [
           "message" => $messages["message_sent"],
@@ -72,9 +68,9 @@
           httpException($messages["chat_not_found"], 404)['end']();
         }
         
-        $initiatorParticipant = $this->chatsService->getChatParticipantByUserId($req["user"]["id"], $chat["id"]);
+        $initiatorParticipant = $this->chatsService->isUserChatParticipant($req["user"]["id"], $chat["id"]);
         
-        if (is_null($initiatorParticipant))
+        if (!$initiatorParticipant)
         {
           httpException($messages["not_enough_permission"], 403)['end']();
         }

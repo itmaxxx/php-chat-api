@@ -45,7 +45,8 @@
     }
   
     $body = [
-      "message" => "Hello world"
+      "content" => "Hello world",
+      "contentType" => 0
     ];
     
     $response = request(
@@ -67,6 +68,7 @@
       [$response, $json] = getChatMessages($MaxAndIlyaChat["id"], $MaxDmitriev);
       
       assertStrict($response['info']['http_code'], 200);
+      assertStrict(count($json->data->messages), 3);
     });
     
     it("should return error when trying to get private chat messages for NOT a chat participant", function () {
@@ -84,6 +86,7 @@
       [$response, $json] = getChatMessages($GymPartyPublicChat["id"], $MaxDmitriev);
       
       assertStrict($response['info']['http_code'], 200);
+      assertStrict(count($json->data->messages), 2);
     });
     
     it("should return not authorized when trying to get chat messages without authorization", function () {
@@ -116,11 +119,12 @@
   
   describe("[POST] /api/chats/:chatId/messages", function () {
     it("should send message to private chat for chat participant", function () {
-      global $MaxDmitriev, $MaxAndIlyaChat;
+      global $MaxDmitriev, $MaxAndIlyaChat, $messages;
     
       [$response, $json] = sendMessageToChat($MaxAndIlyaChat["id"], $MaxDmitriev);
-    
-      assertStrict($response['info']['http_code'], 200);
+      
+      assertStrict($response['info']['http_code'], 201);
+      assertStrict($json->data->message, $messages["message_sent"]);
     });
   
     it("should return error when trying to send message to private chat for NOT a chat participant", function () {
@@ -133,9 +137,9 @@
     });
   
     it("should return error when trying to send message to public chat for NOT a chat participant", function () {
-      global $messages, $MaxDmitriev, $GymPartyPublicChat;
+      global $messages, $MatveyGorelik, $GymPartyPublicChat;
     
-      [$response, $json] = sendMessageToChat($GymPartyPublicChat["id"], $MaxDmitriev);
+      [$response, $json] = sendMessageToChat($GymPartyPublicChat["id"], $MatveyGorelik);
     
       assertStrict($response['info']['http_code'], 403);
       assertStrict($json->data->error, $messages["not_enough_permission"]);
