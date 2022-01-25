@@ -3,11 +3,12 @@
   @include_once "./vendor/autoload.php";
   @include_once "./utils/httpException.php";
   @include_once "./utils/request.php";
+  @include_once "./guards/jwtAuthGuard.php";
   @include_once "./users/users.controller.php";
   @include_once "./db/db.controller.php";
   @include_once "./chats/chats.controller.php";
+  @include_once "./messages/messages.controller.php";
   @include_once "./auth/auth.controller.php";
-  @include_once "./guards/jwtAuthGuard.php";
   
   class AppController
   {
@@ -23,6 +24,7 @@
     private UsersController $usersController;
     private ChatsController $chatsController;
     private AuthController $authController;
+    private MessagesController $messagesController;
     # Guards
     private JwtAuthGuard $jwtAuthGuard;
     
@@ -39,6 +41,7 @@
       $this->usersController = new UsersController($this->conn);
       $this->authController = new AuthController($this->conn);
       $this->chatsController = new ChatsController($this->conn);
+      $this->messagesController = new MessagesController($this->conn);
       
       # Initialize guards
       $this->jwtAuthGuard = new JwtAuthGuard(new UsersService($this->conn));
@@ -94,6 +97,12 @@
             $this->chatsController->getChatParticipants($this->_req->getRequest());
             return;
           }
+          if (preg_match("/\/api\/chats\/(?'chatId'[a-z0-9]+)\/messages/", $this->req['resource']))
+          {
+            $this->_req->useGuard($this->jwtAuthGuard);
+            $this->messagesController->getChatMessages($this->_req->getRequest());
+            return;
+          }
           # /chats/:chatId
           if (strpos($this->req['resource'], '/api/chats/') === 0)
           {
@@ -114,6 +123,12 @@
           {
             $this->_req->useGuard($this->jwtAuthGuard);
             $this->chatsController->addUserToChat($this->_req->getRequest(), $reqBody["data"]);
+            return;
+          }
+          if (preg_match("/\/api\/chats\/(?'chatId'[a-z0-9]+)\/messages/", $this->req['resource']))
+          {
+            $this->_req->useGuard($this->jwtAuthGuard);
+            $this->messagesController->createMessage($this->_req->getRequest(), $reqBody["data"]);
             return;
           }
           if ($this->req['resource'] === '/api/chats')
