@@ -2,7 +2,7 @@
   
   class UsersService
   {
-    private $conn;
+    private PDO $conn;
     
     function __construct($conn)
     {

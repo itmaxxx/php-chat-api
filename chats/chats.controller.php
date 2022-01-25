@@ -9,8 +9,9 @@
   
   class ChatsController
   {
-    private $chatsService, $usersService;
-    
+    private UsersService $usersService;
+    private ChatsService $chatsService;
+  
     function __construct($conn)
     {
       $this->chatsService = new ChatsService($conn);

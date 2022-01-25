@@ -8,7 +8,7 @@
   
   class AuthController
   {
-    private $usersService;
+    private UsersService $usersService;
     
     function __construct($conn)
     {

@@ -6,7 +6,7 @@
   
   class DbController
   {
-    private $conn;
+    private PDO $conn;
     
     public function __construct($dbConfig)
     {
