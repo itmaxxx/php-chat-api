@@ -7,5 +7,5 @@
     "user" => "root",
     "pass" => "root",
     "name" => "web_chat",
-    "charset" => "utf8",
+    "charset" => "utf8mb4",
   ];
