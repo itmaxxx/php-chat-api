@@ -2,8 +2,9 @@
   
   @include_once __DIR__ . "/chats.php";
   @include_once  __DIR__ . "/users.php";
+  @include_once __DIR__ . "/messages.php";
   
-  global $MaxAndIlyaChat, $MaxDmitriev, $IlyaMehof, $DeletedChatWithMaxAndMatvey, $MatveyGorelik, $GymPartyPublicChat;
+  global $MaxAndIlyaChat, $MaxDmitriev, $IlyaMehof, $DeletedChatWithMaxAndMatvey, $MatveyGorelik, $GymPartyPublicChat, $IlyaMessageInChatWithMax;
   
   $MaxInChatWithIlya = [
     "chatId" => $MaxAndIlyaChat["id"],
@@ -14,7 +15,8 @@
   $IlyaInChatWithMax = [
     "chatId" => $MaxAndIlyaChat["id"],
     "userId" => $IlyaMehof["id"],
-    "permission" => 2
+    "permission" => 2,
+    "lastSeenMessageId" => $IlyaMessageInChatWithMax["id"]
   ];
   
   $MaxInDeletedChatWithMatvey = [
