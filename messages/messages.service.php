@@ -9,21 +9,29 @@
       $this->conn = $conn;
     }
   
-    function createMessage($id, )
+    function createMessage($id, $chatId, $userId, $content, $contentType)
     {
-      $sql = "INSERT INTO Chats (id, ) VALUES (:id, )";
+      $sql = "INSERT INTO Messages (id, chatId, userId, content, contentType) VALUES (:id, :chatId, :userId, :content, :contentType)";
       $stmt = $this->conn->prepare($sql);
       $stmt->bindValue(":id", $id);
+      $stmt->bindValue(":chatId", $chatId);
+      $stmt->bindValue(":userId", $userId);
+      $stmt->bindValue(":content", $content);
+      $stmt->bindValue(":contentType", $contentType);
       $stmt->execute();
     }
   
-    function getChatMessages($chatId)
+    function getChatMessages($chatId): array
     {
       $sql = "SELECT * FROM Messages WHERE chatId=:chatId";
       $stmt = $this->conn->prepare($sql);
       $stmt->bindValue(":chatId", $chatId);
       $stmt->execute();
-    
-      return $stmt->rowCount() > 0;
+      
+      if ($stmt->rowCount() > 0) {
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+      } else {
+        return [];
+      }
     }
   }
