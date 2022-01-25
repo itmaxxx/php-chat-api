@@ -1,4 +1,4 @@
-<h1>Chats e2e</h1>
+<h1>Messages e2e</h1>
 <pre>
 <?php
   
