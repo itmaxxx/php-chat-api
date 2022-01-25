@@ -4,6 +4,7 @@
   @include_once("./fixtures/chats.php");
   @include_once("./fixtures/chatParticipants.php");
   @include_once("./fixtures/messages.php");
+  @include_once __DIR__ . "/../config.php";
   
   class DbController
   {
@@ -11,9 +12,12 @@
     
     public function __construct($dbConfig)
     {
+      global $config;
+      
       $this->connectToDb($dbConfig);
       
-      // TODO: Don't run this if we are in production mode
+      if ($config["mode"] != "test") return;
+      
       $this->dropTables(['ChatParticipants', 'Messages', 'Users', 'Chats']);
       // $this->dropDB($dbConfig["name"]);
       

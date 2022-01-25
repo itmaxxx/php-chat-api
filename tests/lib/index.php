@@ -1,5 +1,13 @@
 <?php
   
+  @include_once __DIR__ . '/../../config.php';
+  
+  global $config;
+  
+  if ($config['mode'] !== "test") {
+    die("App should be in test mode to run tests");
+  }
+  
   class TestException extends Exception
   {
     protected $exceptionMessage;
