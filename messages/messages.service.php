@@ -24,15 +24,45 @@
   
     function getChatMessages($chatId): array
     {
-      $sql = "SELECT * FROM Messages WHERE chatId=:chatId";
+      $sql = <<<SQL
+        SELECT
+          M.id AS id,
+          M.content AS content,
+          M.contentType AS contentType,
+          M.createdAt AS createdAt,
+          U.id AS user_id,
+          U.fullname AS user_fullname,
+          U.username AS user_username,
+          U.profileImage AS user_profileImage
+        FROM Messages AS M, Users AS U
+        WHERE chatId=:chatId
+        AND M.userId=U.id
+      SQL;
       $stmt = $this->conn->prepare($sql);
       $stmt->bindValue(":chatId", $chatId);
       $stmt->execute();
       
       if ($stmt->rowCount() > 0) {
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return array_map(fn($message): array => $this->createMessageRO($message), $messages);
       } else {
         return [];
       }
+    }
+    
+    function createMessageRO($message): array
+    {
+      return [
+        "id" => $message["id"],
+        "content" => $message["content"],
+        "contentType" => $message["contentType"],
+        "createdAt" => $message["createdAt"],
+        "user" => [
+          "id" => $message["user_id"],
+          "username" => $message["user_username"],
+          "fullname" => $message["user_fullname"],
+          "profileImage" => $message["user_profileImage"],
+        ]
+      ];
     }
   }
