@@ -119,7 +119,7 @@
           userId VARCHAR(16) NOT NULL,
           content NVARCHAR(2048) NOT NULL,
           contentType TINYINT NOT NULL DEFAULT 0,
-          createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          createdAt INT NOT NULL,
           FOREIGN KEY (chatId) REFERENCES Chats (id),
           FOREIGN KEY (userId) REFERENCES Users (id)
         );

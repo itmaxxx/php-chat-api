@@ -68,7 +68,7 @@
       [$response, $json] = getChatMessages($MaxAndIlyaChat["id"], $MaxDmitriev);
       
       assertStrict($response['info']['http_code'], 200);
-      assertStrict(count($json->data->messages), 3);
+      assertStrict(count($json->data->messages), 4);
     });
     
     it("should return error when trying to get private chat messages for NOT a chat participant", function () {
