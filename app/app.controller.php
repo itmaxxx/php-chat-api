@@ -64,56 +64,7 @@
       switch ($this->req['method'])
       {
         case 'GET':
-          if ($this->req['resource'] === '/api/users/me')
-          {
-            // When we require authorization and want to get user in controller
-            $this->_req->useGuard($this->jwtAuthGuard);
-            // We need to call getRequest() method in original request method
-            $this->usersController->getMe($this->_req->getRequest());
-            return;
-          }
-          # /users/me/chats
-          if ($this->req['resource'] === '/api/users/me/chats')
-          {
-            $this->_req->useGuard($this->jwtAuthGuard);
-            $this->usersController->getUserChats($this->_req->getRequest());
-            return;
-          }
-          # /users/:userId
-          if (strpos($this->req['resource'], '/api/users/') === 0)
-          {
-            $this->usersController->getUserById($this->req);
-            return;
-          }
-          if ($this->req['resource'] === '/api/users')
-          {
-            $this->usersController->getUsers();
-            return;
-          }
-          # /chats/:chatId/users
-          if (preg_match("/\/api\/chats\/(?'chatId'[a-z0-9]+)\/users/", $this->req['resource']))
-          {
-            $this->_req->useGuard($this->jwtAuthGuard);
-            $this->chatsController->getChatParticipants($this->_req->getRequest());
-            return;
-          }
-          if (preg_match("/\/api\/chats\/(?'chatId'[a-z0-9]+)\/messages/", $this->req['resource']))
-          {
-            $this->_req->useGuard($this->jwtAuthGuard);
-            $this->messagesController->getChatMessages($this->_req->getRequest());
-            return;
-          }
-          # /chats/:chatId
-          if (strpos($this->req['resource'], '/api/chats/') === 0)
-          {
-            $this->_req->useGuard($this->jwtAuthGuard);
-            $this->chatsController->getChatById($this->_req->getRequest());
-            return;
-          }
-          
-          httpException("Route not found " . $this->req['resource'], 404)['end']();
-          logMessage("Route not found $this->req");
-          
+          this->runGet();
           break;
         
         case 'POST':
@@ -175,5 +126,58 @@
           
           break;
       }
+    }
+
+    private function runGet()
+    {
+      if ($this->req['resource'] === '/api/users/me')
+      {
+        // When we require authorization and want to get user in controller
+        $this->_req->useGuard($this->jwtAuthGuard);
+        // We need to call getRequest() method in original request method
+        $this->usersController->getMe($this->_req->getRequest());
+        return;
+      }
+      # /users/me/chats
+      if ($this->req['resource'] === '/api/users/me/chats')
+      {
+        $this->_req->useGuard($this->jwtAuthGuard);
+        $this->usersController->getUserChats($this->_req->getRequest());
+        return;
+      }
+      # /users/:userId
+      if (strpos($this->req['resource'], '/api/users/') === 0)
+      {
+        $this->usersController->getUserById($this->req);
+        return;
+      }
+      if ($this->req['resource'] === '/api/users')
+      {
+        $this->usersController->getUsers();
+        return;
+      }
+      # /chats/:chatId/users
+      if (preg_match("/\/api\/chats\/(?'chatId'[a-z0-9]+)\/users/", $this->req['resource']))
+      {
+        $this->_req->useGuard($this->jwtAuthGuard);
+        $this->chatsController->getChatParticipants($this->_req->getRequest());
+        return;
+      }
+      if (preg_match("/\/api\/chats\/(?'chatId'[a-z0-9]+)\/messages/", $this->req['resource']))
+      {
+        $this->_req->useGuard($this->jwtAuthGuard);
+        $this->messagesController->getChatMessages($this->_req->getRequest());
+        return;
+      }
+      # /chats/:chatId
+      if (strpos($this->req['resource'], '/api/chats/') === 0)
+      {
+        $this->_req->useGuard($this->jwtAuthGuard);
+        $this->chatsController->getChatById($this->_req->getRequest());
+        return;
+      }
+      
+      httpException("Route not found " . $this->req['resource'], 404)['end']();
+      logMessage("Route not found $this->req");
     }
   }
