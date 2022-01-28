@@ -41,10 +41,13 @@
           httpException($messages["not_enough_permission"], 403)['end']();
         }
         
-        $this->messagesService->createMessage(randomId(), $chat["id"], $req["user"]["id"], $messageDto["content"], $messageDto["contentType"]);
+        $createdMessageId = randomId();
+        
+        $this->messagesService->createMessage($createdMessageId, $chat["id"], $req["user"]["id"], $messageDto["content"], $messageDto["contentType"]);
         
         $response = [
           "message" => $messages["message_sent"],
+          "createdMessageId" => $createdMessageId
         ];
         
         jsonResponse($response, 201)['end']();
