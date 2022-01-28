@@ -37,6 +37,7 @@
         FROM Messages AS M, Users AS U
         WHERE chatId=:chatId
         AND M.userId=U.id
+        ORDER BY M.createdAt ASC
       SQL;
       $stmt = $this->conn->prepare($sql);
       $stmt->bindValue(":chatId", $chatId);
